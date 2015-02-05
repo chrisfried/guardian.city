@@ -4,7 +4,11 @@
   "description": "A game of deduction, deception and hidden identities.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chrisfried/heists.git"
   },
   "author": "Chris Fried",
   "license": "BY-NC-SA",
