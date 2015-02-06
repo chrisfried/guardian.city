@@ -97,7 +97,7 @@ angular.module('heists.controllers', [])
 
     function setProgStyle() {
       if($scope.game){
-        var playersWaiting = _.reduce($scope.game.players, function(total, player) {
+        var playersWaiting = _.reduce($scope.game.seats, function(total, player) {
           if(player.selectedWhiteCardId){return total + 1}
           else{ return total}
         }, 0);
@@ -105,7 +105,7 @@ angular.module('heists.controllers', [])
         if($scope.game.isReadyForReview){
           playersWaiting += 1;
         }
-        $scope.progStyle = {width: ((playersWaiting / $scope.game.players.length) * 100)  + '%'};
+        $scope.progStyle = {width: ((playersWaiting / $scope.game.seats.length) * 100)  + '%'};
       }
     };
 
