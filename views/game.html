@@ -1,0 +1,66 @@
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Heists</a><p class="navbar-text">{{game.name}}</p>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="" ng-show="!!gameError">
+    <div class="alert alert-danger">
+      {{gameError}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-9">
+      <div id="notificationLeader" ng-show="showNotificationLeader()" class="alert alert-info center">You are the Leader.</div>
+      <div id="role" ng-show="showRole()">
+        {{seat.roleName}}
+      </div>
+      <div id="playerList" ng-show="showPlayerList()">
+        <div ng-repeat="seat in game.seats" ng-class="" ng-click="">
+          {{seat.playerName}}
+        </div>
+      </div>
+      <div id="teamList" ng-show="showTeamList()">
+        <div class="" ng-repeat="seat in game.currentRound.team" ng-click="">
+          {{seat.playerName}}
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="">
+        <h4>Round Progress</h4>
+        <div class="progress">
+          <div id="gameProgress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ng-style="progStyle">
+          </div>
+        </div>
+        <table id="roundSummary" class="table">
+          <tbody id="roundSummaryEntries">
+          </tbody>
+        </table>
+      </div>
+      <div id="roundPlayers" class=""> </div>
+      <h4>Player Status</h4>
+      <div id="roundHistory" class="">
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="player in game.players">
+            <span class="label label-as-badge pull-right" ng-class="'label-' + getPlayerStatusClass(player)">{{player.awesomePoints}} | {{getPlayerStatus(player)}}</span>
+            {{player.name}}
+          </li>
+        </ul>
+      </div>
+      <h4>Round Winners</h4>
+      <div id="roundWinners" class="">
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="item in game.history">
+          <span class="text-success">{{item.winner}}:&nbsp;</span>
+          <span ng-bind-html="buildWinningText(item)"></span>
+          </li>
+        </ul>
+      </div>
+      <h4 ng-show="game.hangout"><a class="label label-success" ng-href="https://plus.google.com/hangouts/_/{{game.hangout}}" target="_blank">Join Google Hangout</a></h4>
+    </div>
+  </div>
+</div>

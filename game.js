@@ -96,7 +96,8 @@ function joinGame(game, player) {
       hasQuestVoted: false,
       questVote: false,
       vacant: false,
-      vacatorName: ''
+      vacatorName: '',
+      roleName: 'Criminal'
     };
     game.seats.push(newSeat);
   }
@@ -170,13 +171,16 @@ function startGame(gameId) {
 
       game.seats = _.shuffle(game.seats);
       game.seats[0].isAllKnowing = true;
+      game.seats[0].roleName = 'Criminal Mastermind';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
+      game.seats[0].roleName = 'Dirty Cop';
 
       var nextSeat = 2;
       var remainingMinority = game.minority - 1;
       while (remainingMinority > 0) {
         game.seats[nextSeat].isMinority = true;
+        game.seats[nextSeat].roleName = 'Undercover Cop';
         nextSeat++;
         remainingMinority--;
       }

@@ -65,8 +65,8 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
-app.get('/', function (req, res) { res.sendfile('./views/index.html'); });
-app.get('/views/*', function (req, res) { res.sendfile('./views/' + req.params[0]); });
+app.get('/', function (req, res) { res.sendFile(__dirname + '/views/index.html'); });
+app.get('/views/*', function (req, res) { res.sendFile(__dirname + '/views/' + req.params[0]); });
 app.get('/list', function (req, res) { res.json(Game.listAvailable()); });
 app.get('/listall', function (req, res) { res.json(Game.listAll()); });
 app.post('/add', function (req, res) {
