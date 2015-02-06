@@ -55,6 +55,22 @@ function getSeat(game, playerId) {
   return _.find(game.seats, function(seat) { return seat.playerId === playerId; });
 }
 
+function listAvailable() {
+  return toInfo(_.filter(gameList, function(x) {
+    return !x.isStarted
+  }));
+}
+
+function listAll() {
+  return toInfo(gameList);
+}
+
+function toInfo(gameList) {
+  return _.map(gameList, function(game) {
+    return { id: game.id, name: game.name, playerCount: game.players.length };
+  });
+}
+
 function addGame(game) {
   game.seats = [];
   game.readyToStart = false;
@@ -375,6 +391,8 @@ function lastDitch(gameId, playerId) {
 
 exports.getGame = getGame;
 exports.getSeat = getSeat;
+exports.listAvailable = listAvailable;
+exports.listAll = listAll;
 exports.addGame = addGame;
 exports.joinGame = joinGame;
 exports.departGame = departGame;
@@ -384,4 +402,4 @@ exports.addTeamMember = addTeamMember;
 exports.removeTeamMember = removeTeamMember;
 exports.teamVote = teamVote;
 exports.questVote = questVote;
-exports.lastDitch =lastDitch;
+exports.lastDitch = lastDitch;
