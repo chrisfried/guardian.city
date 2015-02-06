@@ -119,7 +119,7 @@ angular.module('heists.controllers', [])
 
     function initSocket() {
       socket = io.connect('/', {query: 'playerId=' + $routeParams.playerId});
-      if(socket.socket.connected){
+      if(socket.connected){
         socket.emit('connectToGame', { gameId: $routeParams.gameId, playerId: $routeParams.playerId, playerName: GameService.playerName });
       }
       socket.on('connect', function() {
