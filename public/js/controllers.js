@@ -181,7 +181,7 @@ angular.module('heists.controllers', [])
 
     function initSocket() {
       socket = io.connect('/lobby');
-      if(socket.socket.connected){
+      if(socket.connected){
         $scope.getGames();
       }
       socket.on('connect', function() {
