@@ -1,13 +1,13 @@
 var express = require('express');
 var app = express();
-var server = require('http').createServer(app);
+var server = require('http').Server(app);
 var bodyParser = require('body-parser');
+var io = require('socket.io')(server);
+
 var Game = require('./game.js');
 var players = { };
-var io = require('socket.io').listen(server);
-var socketCount = 0;
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 80);
 
 app.use(bodyParser.json());
 app.use('/public', express.static('public'));
@@ -23,8 +23,10 @@ function broadcastGame(gameId) {
 
 function gameViewModel(gameId) {
   var game = Game.getGame(gameId);
-  var viewModel = JSON.parse(JSON.stringify(game));
-  return viewModel;
+  if (game) {
+    var viewModel = JSON.parse(JSON.stringify(game));
+    return viewModel;
+  }
 }
 
 var lobbySocket = io
@@ -36,10 +38,8 @@ var lobbySocket = io
   })
 
 io.sockets.on('connection', function(socket) {
-  socketCount+=1;
-  console.info('*****SocketCount: ' + socketCount);
   socket.on('connectToGame', function(data) {
-    console.info('server: connectToGame');
+    console.info(data.playerName + ' connected to Game ' + data.gameId);
     var game = Game.getGame(data.gameId);
     if(game){
       if(!players[data.gameId]) {
@@ -55,11 +55,11 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function() {
-    socketCount-=1;
     if(socket.playerId && socket.gameId){
-      console.info('socket disconnect ' + socket.playerId);
+      console.info(socket.playerId + ' disconnected');
       delete players[socket.gameId][socket.playerId];
       Game.departGame(socket.gameId, socket.playerId);
+      broadcastGame(socket.gameId);
       lobbySocket.emit('gameAdded', Game.listAvailable());
     }
   });
@@ -76,7 +76,7 @@ app.post('/add', function (req, res) {
 });
 app.get('/gamebyid', function (req, res) { res.json(Game.getGame(req.query.id)); });
 
-app.post('/joingame', function (req, res) {
+app.post('/joinGame', function (req, res) {
   var game = Game.getGame(req.body.gameId);
   if(!game) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -87,18 +87,20 @@ app.post('/joingame', function (req, res) {
 
   game = Game.joinGame(game, { id: req.body.playerId, name: req.body.playerName });
   returnGame(req.body.gameId, res);
+  broadcastGame(req.body.gameId);
   lobbySocket.emit('gameAdded', Game.listAvailable());
 });
 
-app.post('/departgame', function(req, res) {
+app.post('/departGame', function(req, res) {
   Game.departGame(req.body.gameId, req.body.playerId);
   lobbySocket.emit('gameAdded', Game.listAvailable());
   broadcastGame(req.body.gameId);
 });
 
-app.post('/startgame', function(req, res) {
+app.post('/startGame', function(req, res) {
   Game.startGame(req.body.gameId);
   broadcastGame(req.body.gameId);
+  lobbySocket.emit('gameAdded', Game.listAvailable());
   returnGame(req.body.gameId, res);
 });
 
@@ -108,31 +110,25 @@ app.post('/ready', function(req, res) {
   returnGame(req.body.gameId, res);
 });
 
-app.post('/addteammember', function(req, res){
-  Game.addTeamMember(req.body.gameId, req.body.playerId);
+app.post('/toggleTeam', function(req, res){
+  Game.toggleTeam(req.body.gameId, req.body.playerId);
   broadcastGame(req.body.gameId);
   returnGame(req.body.gameId, res);
 });
 
-app.post('/removeteammember', function(req, res){
-  Game.removeTeamMember(req.body.gameId, req.body.playerId);
-  broadcastGame(req.body.gameId);
-  returnGame(req.body.gameId, res);
-});
-
-app.post('/teamvote', function(req, res){
+app.post('/teamVote', function(req, res){
   Game.teamVote(req.body.gameId, req.body.playerId, req.body.vote);
   broadcastGame(req.body.gameId);
   returnGame(req.body.gameId, res);
 });
 
-app.post('/questvote', function(req, res){
-  Game.questVote(req.body.gameId, req.body.playerId, req.body.vote);
+app.post('/heistVote', function(req, res){
+  Game.heistVote(req.body.gameId, req.body.playerId, req.body.vote);
   broadcastGame(req.body.gameId);
   returnGame(req.body.gameId, res);
 });
 
-app.post('/lastditch', function(req, res){
+app.post('/lastDitch', function(req, res){
   Game.lastDitch(req.body.gameId, req.body.playerId);
   broadcastGame(req.body.gameId);
   returnGame(req.body.gameId, res);

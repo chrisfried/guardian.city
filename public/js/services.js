@@ -27,19 +27,28 @@ angular.module('heists.services', [])
         return $http.post('/add', { id: guid(), name: this.playerName + "'s game" });
       },
       joinGame: function(gameId, playerId, name) {
-        return $http.post("/joingame", { gameId: gameId, playerId: playerId, playerName: name });
+        return $http.post("/joinGame", { gameId: gameId, playerId: playerId, playerName: name });
       },
       departGame: function(gameId, playerId) {
-        $http.post('/departgame', { gameId: gameId, playerId: playerId});
+        $http.post('/departGame', { gameId: gameId, playerId: playerId});
       },
-      selectCard: function(gameId, playerId, selectedCard){
-        $http.post("/selectCard", { gameId: gameId, playerId: playerId, whiteCardId: selectedCard });
+      startGame: function(gameId){
+        $http.post("/startGame", { gameId: gameId});
       },
-      selectWinner: function(gameId, selectedCard) {
-        $http.post("/selectWinner", { gameId: gameId, cardId: selectedCard });
+      ready: function(gameId, playerId) {
+        $http.post('/ready', { gameId: gameId, playerId: playerId});
       },
-      readyForNextRound: function(gameId, playerId) {
-        $http.post("readyForNextRound",  { playerId: playerId, gameId: gameId });
-      }
+      toggleTeam: function(gameId, playerId) {
+        $http.post('/toggleTeam', { gameId: gameId, playerId: playerId});
+      },
+      teamVote: function(gameId, playerId, vote) {
+        $http.post('/teamVote', { gameId: gameId, playerId: playerId, vote: vote});
+      },
+      heistVote: function(gameId, playerId, vote) {
+        $http.post('/heistVote', { gameId: gameId, playerId: playerId, vote: vote});
+      },
+      lastDitch: function(gameId, playerId) {
+        $http.post('/lastDitch', { gameId: gameId, playerId: playerId});
+      },
     }
   });

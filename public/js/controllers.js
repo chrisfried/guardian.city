@@ -42,7 +42,7 @@ angular.module('heists.controllers', [])
   .controller('GameCtrl', function($scope, $routeParams, GameService){
     console.info('GameCtrl loaded');
 
-    var socket = io.connect();;
+    var socket = io.connect('http://localhost:5000');;
 
     $scope.game = {};
     $scope.seat = {};
@@ -54,59 +54,31 @@ angular.module('heists.controllers', [])
     GameService.playerName = $routeParams.playerName;
 
     //ng-show helper functions
-    $scope.showNotificationLeader = function() {
-      return $scope.seat.isLeader
-    };
+
     //end ng-show helper functions
 
-    $scope.selectCard = function(card) {
-      GameService.selectCard($scope.gameId, $scope.playerId, card);
+    $scope.startGame = function() {
+      GameService.startGame($scope.gameId);
     };
 
-    $scope.getCardClass = function(card) {
-      if(card === $scope.seat.selectedWhiteCardId) {
-        return 'whiteCard whiteCardSelect btn-primary'
-      } else {
-        return 'whiteCard whiteCardSelect'
-      }
+    $scope.ready = function() {
+      GameService.ready($scope.gameId, $scope.playerId);
     };
 
-    $scope.getButtonText = function(card) {
-      if(card === $scope.seat.selectedWhiteCardId) {
-        return 'selected'
-      } else {
-        return 'select'
-      }
+    $scope.toggleTeam = function(playerId) {
+      GameService.toggleTeam($scope.gameId, playerId);
+    }
+
+    $scope.teamVote = function(vote) {
+      GameService.teamVote($scope.gameId, $scope.playerId, vote);
     };
 
-    $scope.selectWinner = function(card) {
-        GameService.selectWinner($scope.gameId, card);
+    $scope.heistVote = function(vote) {
+      GameService.heistVote($scope.gameId, $scope.playerId, vote);
     };
 
-    $scope.getWinningCardClass = function(card) {
-      if(card === $scope.game.winningCardId){
-        return 'alert alert-success'
-      } else {
-        return ''
-      }
-    };
-
-    $scope.readyForNextRound = function() {
-      GameService.readyForNextRound($scope.gameId, $scope.playerId);
-    };
-
-    function setProgStyle() {
-      if($scope.game){
-        var playersWaiting = _.reduce($scope.game.seats, function(total, player) {
-          if(player.selectedWhiteCardId){return total + 1}
-          else{ return total}
-        }, 0);
-        //this extra addition brings the progress bar to 100% when the game is ready for review
-        if($scope.game.isReadyForReview){
-          playersWaiting += 1;
-        }
-        $scope.progStyle = {width: ((playersWaiting / $scope.game.seats.length) * 100)  + '%'};
-      }
+    $scope.lastDitch = function(playerId) {
+      GameService.lastDitch($scope.gameId, playerId);
     };
 
     function renderGame(game) {
@@ -114,11 +86,10 @@ angular.module('heists.controllers', [])
       $scope.seat = _.find(game.seats, function(seat) {
         return seat.playerId === $scope.playerId;
       });
-      setProgStyle();
     };
 
     function initSocket() {
-      socket = io.connect('/', {query: 'playerId=' + $routeParams.playerId});
+      socket = io.connect('http://localhost:5000/', {query: 'playerId=' + $routeParams.playerId});
       if(socket.connected){
         socket.emit('connectToGame', { gameId: $routeParams.gameId, playerId: $routeParams.playerId, playerName: GameService.playerName });
       }
@@ -180,7 +151,7 @@ angular.module('heists.controllers', [])
     };
 
     function initSocket() {
-      socket = io.connect('/lobby');
+      socket = io.connect('http://localhost:5000/lobby');
       if(socket.connected){
         $scope.getGames();
       }
