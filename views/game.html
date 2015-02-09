@@ -39,7 +39,7 @@
   </div>
 
   <div ng-show="game.state === 'roleReview'">
-    <div class="panel panel-info">
+    <div class="panel panel-default">
       <div class="panel-heading">
         The Game
       </div>
@@ -55,13 +55,17 @@
           <li class="list-group-item"><strong class="text-danger">Undecover Cops</strong> also win if the <strong class="text-danger">Detective</strong> arrests the <strong class="text-success">Criminal Mastermind</strong> after three successful heists.</li>
         </ul>
       </div>
-      <div class="panel-footer" data-toggle="collapse" data-target="#rules" href="#rules">
-        Tap to show/hide game rules.
+      <div class="panel-footer">
+        <button class="btn btn-default btn-block" data-toggle="collapse" data-target="#rules" href="#rules">
+          Tap to show/hide game rules.
+        </button>
       </div>
     </div>
-    <div ng-show="!seat.isReady" class="panel panel-primary">
-      <div class="panel-heading" data-toggle="collapse" data-target="#role" href="#role" >
-        Tap to show/hide your role.
+    <div ng-show="!seat.isReady" class="panel panel-info">
+      <div class="panel-heading">
+        <button class="btn btn-info btn-block" data-toggle="collapse" data-target="#role" href="#role" >
+          Tap to show/hide your role.
+        </button>
       </div>
       <div class="panel-collapse collapse" id="role">
         <div class="panel-body">
