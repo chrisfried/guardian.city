@@ -80,7 +80,7 @@
               <li class="list-group-item" ng-repeat="cop in game.minority">{{seat.isMinority || seat.isAllKnowing ? cop.playerName : 'Unknown'}}</li>
             </ul>
           </div>
-          <button ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg">Ready</button>
+          <button ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg" data-toggle="collapse" data-target="#role" href="#role">Ready</button>
         </div>
       </div>
     </div>
