@@ -21,7 +21,7 @@
       <thead>
       <tr>
         <th ng-repeat="heist in game.heistHistory" ng-class="heistClass(heist);">
-          <span ng-show="heist.completed" class="glyphicon" ng-class="heist.heistSuccessful ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign'"></span>
+          <span ng-show="heist.completed" class="glyphicon" ng-class="heist.heistSuccessful ? 'glyphicon-ok-sign text-success' : 'glyphicon-remove-sign text-danger'"></span>
           <span ng-show="!heist.completed">{{heist.teamSize}}</span>
         </th>
       <tr>
@@ -75,7 +75,7 @@
         <thead>
           <tr>
             <th ng-repeat="vote in game.heistHistory[game.heistCount - 1].heistVotes" ng-class="vote.vote ? 'success' : 'danger'">
-              <span class="glyphicon" ng-class="vote.vote ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign'"></span>
+              <span class="glyphicon" ng-class="vote.vote ? 'glyphicon-ok-sign text-success' : 'glyphicon-remove-sign text-danger'"></span>
             </th>
           </tr>
         </thead>
