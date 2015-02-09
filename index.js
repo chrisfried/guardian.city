@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 var io = require('socket.io')(server);
 
 var Game = require('./game.js');
-var players = { };
 
 server.listen(process.env.PORT || 80);
 
@@ -17,9 +16,7 @@ function returnGame(gameId, res) { res.json(gameViewModel(gameId)); }
 
 function broadcastGame(gameId) {
   var vm = gameViewModel(gameId);
-  for(var player in players[gameId]) {
-    players[gameId][player].emit("updateGame", vm);
-  }
+  io.to(gameId).emit("updateGame", vm);
 }
 
 function gameViewModel(gameId) {
@@ -43,12 +40,9 @@ io.sockets.on('connection', function(socket) {
     console.info(data.playerName + ' connected to Game ' + data.gameId);
     var game = Game.getGame(data.gameId);
     if(game){
-      if(!players[data.gameId]) {
-        players[data.gameId] = { };
-      }
       socket.gameId = data.gameId;
       socket.playerId = data.playerId;
-      players[data.gameId][data.playerId] = socket;
+      socket.join(data.gameId);
       broadcastGame(data.gameId);
     } else {
       socket.emit('gameError', 'Invalid Game ID');
@@ -58,7 +52,6 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function() {
     if(socket.playerId && socket.gameId){
       console.info(socket.playerId + ' disconnected');
-      delete players[socket.gameId][socket.playerId];
       Game.departGame(socket.gameId, socket.playerId);
       broadcastGame(socket.gameId);
       lobbySocket.emit('gameAdded', Game.listAvailable());
@@ -108,6 +101,7 @@ app.post('/startGame', function(req, res) {
 app.post('/ready', function(req, res) {
   Game.ready(req.body.gameId, req.body.playerId);
   broadcastGame(req.body.gameId);
+  lobbySocket.emit('gameAdded', Game.listAvailable());
   returnGame(req.body.gameId, res);
 });
 
