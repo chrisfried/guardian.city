@@ -1,6 +1,9 @@
 {
   "name": "heists",
   "version": "0.0.1",
+  "engines": {
+    "node": "0.12.x"
+  },
   "description": "A game of deduction, deception and hidden identities.",
   "main": "index.js",
   "scripts": {
