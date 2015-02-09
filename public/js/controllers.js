@@ -29,6 +29,7 @@ angular.module('heists.controllers', [])
       console.info('joinGame called for gameId ' + gameId);
       GameService.initName();
       $location.url("/game/"+ gameId + "/pId/" + GameService.playerId + "/name/" + GameService.playerName);
+      window.location.reload();
     };
 
     $scope.$on('enterLobby', function() {
