@@ -15,8 +15,8 @@
 
   <div ng-show="game.state !== 'pregame' && game.state !== 'roleReview'" class="gameTracker panel" ng-class="trackerClass(game)">
     <div ng-show="game.state !== 'postGame' && game.state !== 'lastDitch'" class="panel-heading">Heist {{game.heistCount + 1}}<span ng-show="game.attemptCount > 0">, Attempt {{game.attemptCount + 1}}</span></div>
-    <div ng-show="game.state === 'lastDitch'" class="panel-heading">The Detective's Last Chance</div>
-    <div ng-show="game.state === 'postGame'" class="panel-heading">{{game.minorityVictory ? 'Undercover Cops' : 'Criminals'}} Win!</div>
+    <div ng-show="game.state === 'lastDitch'" class="panel-heading">The Back Stabber's Last Chance</div>
+    <div ng-show="game.state === 'postGame'" class="panel-heading">{{game.minorityVictory ? 'Traitors' : 'Thieves'}} Win!</div>
     <table class="table">
       <thead>
       <tr>
@@ -32,8 +32,8 @@
       <li class="list-group-item" ng-repeat="seat in game.seats | orderBy:'isMinority'" ng-class="seat.isMinority ? 'list-group-item-danger' : 'list-group-item-success'">
         {{seat.playerName}}
         <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Mastermind</span>
-        <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Detective</span>
-        <span class="label label-warning pull-right" ng-show="seat.isLastDitched">Arrested</span>
+        <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Back Stabber</span>
+        <span class="label label-warning pull-right" ng-show="seat.isLastDitched">Stabbed</span>
       </li>
     </ul>
   </div>
@@ -44,15 +44,15 @@
         The Game
       </div>
       <ul class="list-group">
-        <li class="list-group-item"><strong class="text-success">{{game.seats.length - game.minorityCount}} Criminals</strong> vs <strong class="text-danger">{{game.minorityCount}} Undercover Cops</strong></li>
+        <li class="list-group-item"><strong class="text-success">{{game.seats.length - game.minorityCount}} Thieves</strong> vs <strong class="text-danger">{{game.minorityCount}} Traitors</strong></li>
       </ul>
       <div class="panel-collapse collapse" id="rules">
         <ul class="list-group">
-          <li class="list-group-item"><strong class="text-success">Criminals</strong> win the game if <strong>three heists</strong> are <strong class="text-success">successful</strong>.</li>
-          <li class="list-group-item"><strong class="text-danger">Undercover Cops</strong> win the game if <strong>three heists</strong> are <strong class="text-danger">failed</strong>.</li>
-          <li class="list-group-item"><strong class="text-danger">Undercover Cops</strong> know who the other <strong class="text-danger">Undercover Cops</strong> are.</li>
-          <li class="list-group-item">The <strong class="text-success">Criminal Mastermind</strong> knows who the <strong class="text-danger">Undercover Cops</strong> are.</li>
-          <li class="list-group-item"><strong class="text-danger">Undecover Cops</strong> also win if the <strong class="text-danger">Detective</strong> arrests the <strong class="text-success">Criminal Mastermind</strong> after three successful heists.</li>
+          <li class="list-group-item"><strong class="text-success">Thieves</strong> win the game if <strong>three heists</strong> are <strong class="text-success">successful</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Traitors</strong> win the game if <strong>three heists</strong> are <strong class="text-danger">failed</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Traitors</strong> know who the other <strong class="text-danger">Traitors</strong> are.</li>
+          <li class="list-group-item">The <strong class="text-success">Mastermind</strong> knows who the <strong class="text-danger">Traitors</strong> are.</li>
+          <li class="list-group-item"><strong class="text-danger">Traitors</strong> also win if the <strong class="text-danger">Back Stabber</strong> stabs the <strong class="text-success">Mastermind</strong> after three successful heists.</li>
         </ul>
       </div>
       <div class="panel-footer">
@@ -97,7 +97,7 @@
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isOnTeam ? 'list-group-item-info' :  ''" ng-click="toggleTeam(seat.playerId)">{{seat.playerName}}</li>
     </ul>
   </div>
-  <div ng-show="game.state === 'teamBuild' && !seat.isLeader" class="panel panel-default">
+  <div ng-show="game.state === 'teamBuild' && !seat.isLeader" class="panel panel-info">
     <div class="panel-heading">
       {{game.currentRound.leader.playerName}} is choosing {{game.currentRound.teamSize}} Heist Crew members.
     </div>
@@ -123,6 +123,9 @@
         </div>
       </div>
     </div>
+    <div class="panel-footer">
+      Requires {{game.requiredApprovals}} Approve votes to begin Heist.
+    </div>
   </div>
   <div ng-show="game.state === 'teamVote'" class="panel panel-default">
     <div class="panel-heading">
@@ -137,12 +140,18 @@
     <div class="panel-heading">
       You're on the Heist!
     </div>
+    <ul class="list-group">
+      <li ng-repeat="seat in game.currentRound.team" class="list-group-item" ng-class="seat.hasHeistVoted ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
+    </ul>
     <div class="panel-body">
       <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(true)">Succeed</button>
       <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && !seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(false)">Fail</button>
     </div>
+    <div class="panel-footer">
+      <strong class="text-danger">{{game.heistCount === 3 && game.double ? '2 Fails' : '1 Fail'}}</strong> will result in a Failed Heist.
+    </div>
   </div>
-  <div ng-show="game.state === 'heist' && (!seat.isOnTeam || seat.hasHeistVoted)" class="panel panel-default">
+  <div ng-show="game.state === 'heist' && (!seat.isOnTeam || seat.hasHeistVoted)" class="panel panel-info">
     <div class="panel-heading">
       Waiting for the Heist Crew to return...
     </div>
@@ -162,7 +171,7 @@
 
   <div ng-show="game.state === 'lastDitch' && seat.isLastDitch" class="panel panel-primary">
     <div class="panel-heading">
-      Arrest the Criminal Mastermind.
+      Literally stab the Mastermind in the back.
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="!seat.isMinority" ng-click="lastDitch(seat.playerId)">{{seat.playerName}}</li>
@@ -170,36 +179,36 @@
   </div>
   <div ng-show="game.state === 'lastDitch' && !seat.isLastDitch" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for the Detective.
+      Waiting for the Back Stabber.
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="seat.isLastDitch">{{seat.playerName}}</li>
     </ul>
   </div>
 
-  <div ng-show="game.state !== 'pregame' && game.state !== 'postGame'" class="panel" ng-class="game.state === 'roleReview' ? 'panel-info' : 'panel-default'">
+  <div ng-show="game.state !== 'pregame' && game.state !== 'postGame'" class="panel" ng-class="game.state === 'roleReview' ? 'panel-warning' : 'panel-default'">
     <div class="panel-heading">
-      <button class="btn btn-block" data-toggle="collapse" data-target="#role" href="#role" ng-class="game.state === 'roleReview' ? 'btn-info' : 'btn-default'">
+      <button class="btn btn-block" data-toggle="collapse" data-target="#role" href="#role" ng-class="game.state === 'roleReview' && !seat.isReady ? 'btn-warning' : 'btn-default'">
         Tap to show/hide your role.
       </button>
     </div>
     <div class="panel-collapse collapse" id="role">
       <div class="panel-body">
-        You are <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.roleName}}</strong>.
-      </div>
-      <div class="panel-body">
+        <p>You are <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.roleName}}</strong>. You win if three heists <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.isMinority ? 'Fail' : 'Succeed'}}</strong>.</p>
+
         <div class="panel panel-default">
           <div class="panel-heading">
-            The <strong class="text-danger">Undercover Cops</strong> are:
+            The <strong class="text-danger">Traitors</strong> are:
           </div>
           <ul class="list-group">
-            <li class="list-group-item" ng-repeat="cop in game.minority">{{seat.isMinority || seat.isAllKnowing ? cop.playerName : 'Unknown'}}</li>
+            <li class="list-group-item" ng-repeat="traitor in game.minority">{{seat.isMinority || seat.isAllKnowing ? traitor.playerName : 'Unknown'}}</li>
           </ul>
         </div>
-        <button ng-show="game.state === 'roleReview' && !seat.isReady" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg" data-toggle="collapse" data-target="#role" href="#role">Ready</button>
       </div>
     </div>
   </div>
+
+  <button ng-show="game.state === 'roleReview' && !seat.isReady" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg">Ready</button>
 
   <div ng-show="game.state === 'pregame' || game.state === 'postGame'">
     <h3 class="text-center" ng-show="game.state === 'pregame'">{{game.seats.length}} player{{game.seats.length > 1 ? 's' : ''}} connected</h3>

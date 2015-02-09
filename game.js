@@ -102,7 +102,7 @@ function joinGame(game, player) {
       heistVote: false,
       vacant: false,
       vacatorName: '',
-      roleName: 'a Criminal'
+      roleName: 'a Thief'
     };
     game.seats.push(newSeat);
   }
@@ -168,6 +168,7 @@ function startGame(gameId) {
       game.lastDitchSuccessful = false;
       game.majorityHeistWins = 0;
       game.minorityHeistWins = 0;
+      game.requiredApprovals = Math.floor(playerCount/2) + 1;
 
       var variant = _.find(variants, function(variant) {
         return variant.players === playerCount;
@@ -194,22 +195,22 @@ function startGame(gameId) {
           seat.teamVote = false;
           seat.hasHeistVoted = false;
           seat.heistVote = false;
-          seat.roleName = 'a Criminal';
+          seat.roleName = 'a Thief';
       });
 
       game.seats = _.shuffle(game.seats);
       game.seats[0].isAllKnowing = true;
-      game.seats[0].roleName = 'the Criminal Mastermind';
+      game.seats[0].roleName = 'the Mastermind';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
-      game.seats[1].roleName = 'the Detective';
+      game.seats[1].roleName = 'the Back Stabber';
       game.minority.push(game.seats[1]);
 
       var nextSeat = 2;
       var remainingMinority = game.minorityCount - 1;
       while (remainingMinority > 0) {
         game.seats[nextSeat].isMinority = true;
-        game.seats[nextSeat].roleName = 'an Undercover Cop';
+        game.seats[nextSeat].roleName = 'a Traitor';
         game.minority.push(game.seats[nextSeat]);
         nextSeat++;
         remainingMinority--;
