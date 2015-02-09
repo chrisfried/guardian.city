@@ -258,7 +258,7 @@ function newRound(gameId) {
 
     if (game.minorityHeistWins >= 3) {
       game.minorityVictory = true;
-      game.state = 'postGame';
+      finishGame(gameId);
     } else if (game.majorityHeistWins >= 3) {
       game.state = 'lastDitch';
     } else {
@@ -299,18 +299,23 @@ function cycleLeader(gameId) {
 
 function ready(gameId, playerId) {
   var game = getGame(gameId);
-  if (game.state === 'roleReview') {
+  if (game.state === 'roleReview' || game.state === 'pregame' || game.state === 'postGame') {
     var seat = getSeat(game, playerId);
     seat.isReady = true;
 
     var allReady = _.every(game.seats, function(seat) {
       return seat.isReady;
     });
-    if (allReady) {
-      newRound(gameId);
+    if (game.state === 'roleReview' && allReady) {
       _.each(game.seats, function(seat) {
         seat.isReady = false;
       });
+      newRound(gameId);
+    } else if (allReady) {
+      _.each(game.seats, function(seat) {
+        seat.isReady = false;
+      });
+      startGame(gameId);
     }
   }
 }
@@ -428,8 +433,25 @@ function lastDitch(gameId, playerId) {
       game.minorityVictory = true;
       game.lastDitchSuccessful = true;
     }
-    game.state = 'postGame';
+    finishGame(gameId);
   }
+}
+
+function finishGame(gameId) {
+  var game = getGame(gameId);
+  game.gameHistory = [];
+  _.each(game.seats, function(seat) {
+    var seatEndState = {
+      playerName: seat.playerName,
+      isMinority: seat.isMinority,
+      isAllKnowing: seat.isAllKnowing,
+      isLastDitch: seat.isLastDitch,
+      isLastDitched: seat.isLastDitched
+    }
+    game.gameHistory.push(seatEndState);
+  });
+  game.isStarted = false;
+  game.state = 'postGame';
 }
 
 exports.getGame = getGame;
