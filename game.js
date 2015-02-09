@@ -92,6 +92,7 @@ function joinGame(game, player) {
       isMinority: false,
       isAllKnowing: false,
       isLastDitch: false,
+      isLastDitched: false,
       isLeader: false,
       isReady: false,
       isOnTeam: false,
@@ -159,6 +160,7 @@ function startGame(gameId) {
     if (playerCount >= 5 && playerCount <= 10) {
       game.isStarted = true;
       game.roundHistory = [];
+      game.heistHistory = [];
       game.minority = [];
       game.heistCount = 0;
       game.attemptCount = 0;
@@ -173,11 +175,18 @@ function startGame(gameId) {
       game.heistTeamSizes = variant.heistTeamSizes;
       game.double = variant.double;
       game.minorityCount = variant.minority;
+      _.each(game.heistTeamSizes, function(heistTeamSize) {
+        game.heistHistory.push({
+          completed: false,
+          teamSize: heistTeamSize
+        });
+      });
 
       _.each(game.seats, function(seat){
           seat.isMinority = false;
           seat.isAllKnowing = false;
           seat.isLastDitch = false;
+          seat.isLastDitched = false;
           seat.isLeader = false;
           seat.isReady = false;
           seat.isOnTeam = false;
@@ -193,7 +202,7 @@ function startGame(gameId) {
       game.seats[0].roleName = 'the Criminal Mastermind';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
-      game.seats[1].roleName = 'the Dirty Cop';
+      game.seats[1].roleName = 'the Detective';
       game.minority.push(game.seats[1]);
 
       var nextSeat = 2;
@@ -225,6 +234,9 @@ function newRound(gameId) {
         if (game.attemptCount > 4) {
           game.currentRound.completed = true;
           game.currentRound.heistSuccessful = false;
+          game.heistHistory[game.heistCount].heistSuccessful = game.currentRound.heistSuccessful;
+          game.heistHistory[game.heistCount].team = game.currentRound.team;
+          game.heistHistory[game.heistCount].completed = true;
           game.minorityHeistWins++;
           game.heistCount++;
           game.attemptCount = 0;
@@ -246,7 +258,6 @@ function newRound(gameId) {
     if (game.minorityHeistWins >= 3) {
       game.minorityVictory = true;
       game.state = 'postGame';
-      game.isStarted = false;
     } else if (game.majorityHeistWins >= 3) {
       game.state = 'lastDitch';
     } else {
@@ -385,6 +396,7 @@ function heistVote(gameId, playerId, vote) {
       return seat.hasHeistVoted;
     });
     if (allVotes) {
+      game.currentRound.heistVotes = _.shuffle(game.currentRound.heistVotes);
       var yesVotes = _.filter(game.currentRound.team, function(seat) {
         return seat.heistVote;
       });
@@ -394,6 +406,11 @@ function heistVote(gameId, playerId, vote) {
         game.currentRound.heistSuccessful = false;
         game.minorityHeistWins++;
       }
+      game.currentRound.completed = true;
+      game.heistHistory[game.heistCount].heistSuccessful = game.currentRound.heistSuccessful;
+      game.heistHistory[game.heistCount].team = game.currentRound.team;
+      game.heistHistory[game.heistCount].completed = true;
+      game.currentRound.heistVotes = _.shuffle(game.currentRound.heistVotes);
       game.state = 'heistReview';
     }
   }
@@ -403,12 +420,12 @@ function lastDitch(gameId, playerId) {
   var game = getGame(gameId);
   if (game.state === 'lastDitch') {
     var seat = getSeat(game, playerId);
+    seat.isLastDitched = true;
     if (seat.isAllKnowing) {
       game.minorityVictory = true;
       game.lastDitchSuccessful = true;
     }
     game.state = 'postGame';
-    game.isStarted = false;
   }
 }
 

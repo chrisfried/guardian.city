@@ -35,7 +35,7 @@ var lobbySocket = io
     console.info('lobby socket connect');
     var gameList = Game.listAvailable();
     socket.emit('lobbyJoin', gameList);
-  })
+  });
 
 io.sockets.on('connection', function(socket) {
   socket.on('connectToGame', function(data) {

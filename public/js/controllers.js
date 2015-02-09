@@ -22,6 +22,7 @@ angular.module('heists.controllers', [])
           console.info(success);
           $scope.joinGame(success.data.id);
         }, handleError);
+      $scope.$apply;
     };
 
     $scope.joinGame = function(gameId) {
@@ -42,20 +43,51 @@ angular.module('heists.controllers', [])
   .controller('GameCtrl', function($scope, $routeParams, GameService){
     console.info('GameCtrl loaded');
 
-    var socket = io.connect();;
+    var socket = io.connect();
 
     $scope.game = {};
     $scope.seat = {};
-    $scope.progStyle = {width: '0%'};
     $scope.gameId = $routeParams.gameId;
     $scope.playerId = $routeParams.playerId;
     $scope.gameError;
 
     GameService.playerName = $routeParams.playerName;
 
-    //ng-show helper functions
 
-    //end ng-show helper functions
+    $scope.trackerClass = function(game) {
+      if (game.state === 'postGame' && game.minorityVictory) {
+        return 'panel-danger';
+      } else if (game.state === 'postGame') {
+        return 'panel-success';
+      } else {
+        return 'panel-default';
+      }
+    }
+
+    $scope.heistClass = function(heist) {
+      if (heist.completed) {
+        if (heist.heistSuccessful) {
+          return 'success';
+        } else {
+          return 'danger';
+        }
+      } else {
+        return 'default';
+      }
+    };
+
+    $scope.seatHasVotedClass = function(seat) {
+      if (seat.hasTeamVoted) {
+        if (seat.teamVote) {
+          return 'list-group-item-success';
+        } else {
+          return 'list-group-item-danger';
+        }
+      } else {
+        return;
+      }
+    }
+
 
     $scope.startGame = function() {
       GameService.startGame($scope.gameId);
@@ -83,9 +115,11 @@ angular.module('heists.controllers', [])
 
     function renderGame(game) {
       $scope.game = game;
-      $scope.seat = _.find(game.seats, function(seat) {
-        return seat.playerId === $scope.playerId;
-      });
+      if (game) {
+        $scope.seat = _.find(game.seats, function(seat) {
+          return seat.playerId === $scope.playerId;
+        });
+      }
     };
 
     function initSocket() {
@@ -135,7 +169,7 @@ angular.module('heists.controllers', [])
   })
   .controller('LobbyCtrl', function($scope, $location, GameService) {
     console.info('LobbyCtrl loaded');
-    var socket;
+    var lobbySocket;
 
     $scope.availableGames = [];
     $scope.creatingGame = false;
@@ -151,21 +185,21 @@ angular.module('heists.controllers', [])
     };
 
     function initSocket() {
-      socket = io.connect('/lobby');
-      if(socket.connected){
+      lobbySocket = io.connect('/lobby');
+      if(lobbySocket.connected){
         $scope.getGames();
       }
-      socket.on('connect', function() {
+      lobbySocket.on('connect', function() {
         console.info('lobby socket connect');
       });
 
-      socket.on('lobbyJoin', function(gameList) {
+      lobbySocket.on('lobbyJoin', function(gameList) {
         console.info('lobbySocket: lobbyJoin');
         $scope.availableGames = gameList;
         $scope.$apply();
       });
 
-      socket.on('gameAdded', function(gameList) {
+      lobbySocket.on('gameAdded', function(gameList) {
         console.info('gameAdded');
         console.info(gameList);
         $scope.availableGames = gameList;

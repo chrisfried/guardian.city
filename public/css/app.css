@@ -1,0 +1,13 @@
+.table {
+  overflow: hidden;
+}
+.table>thead>tr>th {
+  border: none;
+  text-align: center;
+  font-size: 1.5em;
+  line-height: 1em;
+  vertical-align: middle;
+}
+.gameTracker .table>thead>tr>th.default:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
