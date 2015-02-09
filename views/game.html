@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">Heists</a><p class="navbar-text">{{seat.playerName}} playing {{game.name}}</p>
+      <a class="navbar-brand" href="/" target="_self">Heists</a><p class="navbar-text">{{seat.playerName}} playing {{game.name}}</p>
     </div>
   </div>
 </nav>
@@ -29,7 +29,7 @@
     </table>
     <div ng-show="game.double && game.state !== 'postGame'" class="panel-footer">Heist 4 requires 2 Fails to fail.</div>
     <ul ng-show="game.state === 'postGame'" class="list-group">
-      <li class="list-group-item" ng-repeat="seat in game.seats | orderBy:'isMinority'" ng-class="seat.isMinority ? 'list-group-item-danger' : 'list-group-item-success'">
+      <li class="list-group-item" ng-repeat="seat in game.gameHistory | orderBy:'isMinority'" ng-class="seat.isMinority ? 'list-group-item-danger' : 'list-group-item-success'">
         {{seat.playerName}}
         <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Mastermind</span>
         <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Back Stabber</span>
@@ -210,14 +210,14 @@
 
   <button ng-show="game.state === 'roleReview' && !seat.isReady" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg">Ready</button>
 
-  <div ng-show="game.state === 'pregame' || game.state === 'postGame'" class="panel panel-info">
+  <div ng-show="(game.state === 'pregame' || game.state === 'postGame') && !seat.isReady" class="panel panel-info">
     <div class="panel-heading">{{game.seats.length}} player{{game.seats.length > 1 ? 's' : ''}} connected</div>
     <ul class="list-group">
-      <li ng-repeat="seat in game.seats" class="list-group-item">{{seat.playerName}}</li>
+      <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isReady ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
     </ul>
     <div class="panel-body">
       <button ng-show="!game.readyToStart" type="button" class="btn btn-block btn-disabled btn-lg">Need {{5 - game.seats.length}} more player{{5 - game.seats.length === 1 ? '' : 's'}}</button>
-      <button ng-show="game.readyToStart" ng-click="startGame()" type="button" class="btn btn-block btn-primary btn-lg">Start New Game</button>
+      <button ng-show="game.readyToStart" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg">Ready to Start</button>
     </div>
   </div>
 </div>
