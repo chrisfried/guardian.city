@@ -61,27 +61,29 @@
         </button>
       </div>
     </div>
-    <div ng-show="!seat.isReady" class="panel panel-info">
+  </div>
+
+  <div ng-show="(game.state === 'teamBuild' || game.state === 'teamVote' || game.state === 'postGame' || game.state === 'lastDitch') && game.heistCount > 0">
+    <div ng-show="game.heistHistory[game.heistCount - 1].leader" class="panel" ng-class="game.heistHistory[game.heistCount - 1].heistSuccessful ? 'panel-success' : 'panel-danger'">
       <div class="panel-heading">
-        <button class="btn btn-info btn-block" data-toggle="collapse" data-target="#role" href="#role" >
-          Tap to show/hide your role.
-        </button>
+        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Heist {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'Succeeded' : 'Failed'}}
       </div>
-      <div class="panel-collapse collapse" id="role">
-        <div class="panel-body">
-          You are <strong>{{seat.roleName}}</strong>.
-        </div>
-        <div class="panel-body">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              The <strong class="text-danger">Undercover Cops</strong> are:
-            </div>
-            <ul class="list-group">
-              <li class="list-group-item" ng-repeat="cop in game.minority">{{seat.isMinority || seat.isAllKnowing ? cop.playerName : 'Unknown'}}</li>
-            </ul>
-          </div>
-          <button ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg" data-toggle="collapse" data-target="#role" href="#role">Ready</button>
-        </div>
+      <ul class="list-group">
+        <li ng-repeat="seat in game.heistHistory[game.heistCount - 1].team" class="list-group-item">{{seat.playerName}}</li>
+      </ul>
+      <table class="table">
+        <thead>
+          <tr>
+            <th ng-repeat="vote in game.heistHistory[game.heistCount - 1].heistVotes" ng-class="vote.vote ? 'success' : 'danger'">
+              <span class="glyphicon" ng-class="vote.vote ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign'"></span>
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div ng-show="!game.heistHistory[game.heistCount - 1].leader" class="panel panel-danger">
+      <div class="panel-heading">
+        Previous Heist Failed
       </div>
     </div>
   </div>
@@ -104,7 +106,7 @@
     </ul>
   </div>
 
-  <div ng-show="game.state === 'teamVote'" class="panel panel-default">
+  <div ng-show="game.state === 'teamVote'" class="panel panel-primary">
     <div class="panel-heading">
       {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Heist Crew
     </div>
@@ -149,24 +151,6 @@
     </ul>
   </div>
 
-  <div ng-show="game.state === 'heistReview'">
-    <div class="panel" ng-class="game.currentRound.heistSuccessful ? 'panel-success' : 'panel-danger'">
-      <div class="panel-heading">
-        Heist {{game.currentRound.heistSuccessful ? 'Successful' : 'Failed'}}
-      </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th ng-repeat="vote in game.currentRound.heistVotes" ng-class="vote.vote ? 'success' : 'danger'">
-              <span class="glyphicon" ng-class="vote.vote ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign'"></span>
-            </th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <button ng-show="!seat.isReady" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg">Ready</button>
-  </div>
-
   <div ng-show="seat.isReady" class="panel panel-info">
     <div class="panel-heading">
       Waiting for other players...
@@ -176,7 +160,7 @@
     </ul>
   </div>
 
-  <div ng-show="game.state === 'lastDitch' && seat.isLastDitch" class="panel panel-info">
+  <div ng-show="game.state === 'lastDitch' && seat.isLastDitch" class="panel panel-primary">
     <div class="panel-heading">
       Arrest the Criminal Mastermind.
     </div>
@@ -191,6 +175,30 @@
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="seat.isLastDitch">{{seat.playerName}}</li>
     </ul>
+  </div>
+
+  <div ng-show="game.state !== 'pregame' && game.state !== 'postGame'" class="panel" ng-class="game.state === 'roleReview' ? 'panel-info' : 'panel-default'">
+    <div class="panel-heading">
+      <button class="btn btn-block" data-toggle="collapse" data-target="#role" href="#role" ng-class="game.state === 'roleReview' ? 'btn-info' : 'btn-default'">
+        Tap to show/hide your role.
+      </button>
+    </div>
+    <div class="panel-collapse collapse" id="role">
+      <div class="panel-body">
+        You are <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.roleName}}</strong>.
+      </div>
+      <div class="panel-body">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            The <strong class="text-danger">Undercover Cops</strong> are:
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="cop in game.minority">{{seat.isMinority || seat.isAllKnowing ? cop.playerName : 'Unknown'}}</li>
+          </ul>
+        </div>
+        <button ng-show="game.state === 'roleReview' && !seat.isReady" ng-click="ready()" type="button" class="btn btn-block btn-primary btn-lg" data-toggle="collapse" data-target="#role" href="#role">Ready</button>
+      </div>
+    </div>
   </div>
 
   <div ng-show="game.state === 'pregame' || game.state === 'postGame'">

@@ -1,4 +1,4 @@
-.table {
+.table, .panel {
   overflow: hidden;
 }
 .table>thead>tr>th {

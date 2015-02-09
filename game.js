@@ -224,7 +224,7 @@ function startGame(gameId) {
 
 function newRound(gameId) {
   var game = getGame(gameId);
-  if (game.state === 'roleReview' || game.state === 'heistReview' || game.state === 'teamVote') {
+  if (game.state === 'roleReview' || game.state === 'heist' || game.state === 'teamVote') {
     if (game.currentRound) {
       if (game.currentRound.teamAccepted) {
         game.heistCount++;
@@ -298,7 +298,7 @@ function cycleLeader(gameId) {
 
 function ready(gameId, playerId) {
   var game = getGame(gameId);
-  if (game.state === 'roleReview' || game.state === 'heistReview') {
+  if (game.state === 'roleReview') {
     var seat = getSeat(game, playerId);
     seat.isReady = true;
 
@@ -400,7 +400,7 @@ function heistVote(gameId, playerId, vote) {
       var yesVotes = _.filter(game.currentRound.team, function(seat) {
         return seat.heistVote;
       });
-      if (yesVotes.length === game.currentRound.team.length || (game.currentRound.heist === 3 && yesVotes.length === game.currentRound.team.length - 1)) {
+      if (yesVotes.length === game.currentRound.team.length || (game.double && game.currentRound.heist === 3 && yesVotes.length === game.currentRound.team.length - 1)) {
         game.majorityHeistWins++;
       } else {
         game.currentRound.heistSuccessful = false;
@@ -410,8 +410,10 @@ function heistVote(gameId, playerId, vote) {
       game.heistHistory[game.heistCount].heistSuccessful = game.currentRound.heistSuccessful;
       game.heistHistory[game.heistCount].team = game.currentRound.team;
       game.heistHistory[game.heistCount].completed = true;
+      game.heistHistory[game.heistCount].leader = game.currentRound.leader;
+      game.heistHistory[game.heistCount].heistVotes = _.shuffle(game.currentRound.heistVotes);
       game.currentRound.heistVotes = _.shuffle(game.currentRound.heistVotes);
-      game.state = 'heistReview';
+      newRound(gameId);
     }
   }
 }
