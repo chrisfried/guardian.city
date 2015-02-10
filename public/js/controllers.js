@@ -6,6 +6,8 @@ angular.module('heists.controllers', [])
   .controller('HomeCtrl', function($scope, $location, GameService) {
     console.info('HomeCtrl loaded');
 
+    var socket = io.connect();
+
     var handleError = function(err) {
       console.error(err);
     };
