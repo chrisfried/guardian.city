@@ -28,10 +28,8 @@ angular.module('heists.controllers', [])
     $scope.joinGame = function(gameId) {
       console.info('joinGame called for gameId ' + gameId);
       GameService.initName();
-      var startingLocation = window.location.href;
       $location.url("/game/"+ gameId + "/pId/" + GameService.playerId + "/name/" + GameService.playerName);
-      // Hacky hack hack until I can figure this out...
-      window.location.href = startingLocation + "game/" + gameId + "/pId/" + GameService.playerId + "/name/" + GameService.playerName;
+      window.setTimeout(window.location.reload(true),1000);
     };
 
     $scope.$on('enterLobby', function() {
