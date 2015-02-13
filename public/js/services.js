@@ -8,23 +8,42 @@ angular.module('heists.services', [])
     var guid = function(){
       return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
     };
-    var pId = guid();
+    if (window.localStorage["playerId"]) {
+      var playerId = window.localStorage["playerId"];
+    } else {
+      var playerId = guid();
+      window.localStorage["playerId"] = playerId;
+    }
+
+    if (window.localStorage["playerName"]) {
+      var playerName = window.localStorage["playerName"];
+    } else {
+      var playerName = '';
+    }
 
     return {
-      playerName: '',
-      playerId : pId,
+      playerName: playerName,
+      playerId : playerId,
       newGameId : guid(),
       currentGameId: undefined,
       initName: function() {
         if(this.playerName.length === 0) {
+          if (window.localStorage["playerName"]) {
+            this.playerName = window.localStorage["playerName"];
+          } else {
             this.playerName = 'anonymous ' + s4();
+          }
         }
+        window.localStorage["playerName"] = this.playerName;
       },
       getGames: function() {
         return $http.get('/list');
       },
       createGame: function() {
         return $http.post('/add', { id: guid(), name: this.playerName + "'s game" });
+      },
+      listPrevious: function(gameId) {
+        return $http.post("/listPrevious", { gameId: gameId });
       },
       joinGame: function(gameId, playerId, name) {
         return $http.post("/joinGame", { gameId: gameId, playerId: playerId, playerName: name });

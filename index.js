@@ -68,7 +68,11 @@ app.post('/add', function (req, res) {
   res.json(newGame);
   lobbySocket.emit('gameAdded', Game.listAvailable());
 });
-app.get('/gamebyid', function (req, res) { res.json(Game.getGame(req.query.id)); });
+app.get('/gamebyid', function (req, res) { res.json(Game.getGame(req.body.gameId)); });
+
+app.post('/listPrevious', function (req, res) {
+  res.send(Game.listPrevious(req.body.gameId));
+});
 
 app.post('/joinGame', function (req, res) {
   var game = Game.getGame(req.body.gameId);

@@ -11,3 +11,13 @@
 .gameTracker .table>thead>tr>th.default:nth-of-type(odd) {
   background-color: #f9f9f9;
 }
+.navbar-inverse {
+  background-color: black;
+}
+.navbar-brand>img {
+  height: 25px;
+  margin: 0 auto;
+}
+.navbar-inverse .navbar-brand {
+  width: 100%;
+}

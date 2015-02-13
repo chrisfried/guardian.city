@@ -55,6 +55,12 @@ function getSeat(game, playerId) {
   return _.find(game.seats, function(seat) { return seat.playerId === playerId; });
 }
 
+function listPrevious(gameId) {
+  return toInfo(_.filter(gameList, function(x) {
+    return x.id === gameId;
+  }));
+}
+
 function listAvailable() {
   return toInfo(_.filter(gameList, function(x) {
     return !x.isStarted
@@ -456,6 +462,7 @@ function finishGame(gameId) {
 
 exports.getGame = getGame;
 exports.getSeat = getSeat;
+exports.listPrevious = listPrevious;
 exports.listAvailable = listAvailable;
 exports.listAll = listAll;
 exports.addGame = addGame;

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/#/">Heists</a><p class="navbar-text">lie to your friends</p>
+      <a class="navbar-brand" href="/#/"><img alt="heists" src="public/img/logo.png" class="logo"></a>
     </div>
   </div>
 </nav>
@@ -13,6 +13,7 @@
     </div>
   </form>
   <div ng-show="gameSvc.playerName">
+    <button ng-repeat="game in previousGames" class="btn btn-primary btn-block btn-lg" ng-click="joinGame(game.id)">Rejoin Previous Game</button>
     <button class="btn btn-primary btn-block btn-lg" ng-click="createGame()">Host New Game</button>
     <hr />
     <div class="row" id="availableGames" >
