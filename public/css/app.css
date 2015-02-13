@@ -21,3 +21,7 @@
 .navbar-inverse .navbar-brand {
   width: 100%;
 }
+.btn-default:hover {
+  border-color: #ccc;
+  background-color: white;
+}
