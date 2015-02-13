@@ -149,6 +149,12 @@ function departGame(gameId, playerId) {
     } else {
       vacatedSeat.vacatorName = vacatedSeat.playerName;
       vacatedSeat.vacant = true;
+      var filledSeats = _.find(game.seats, function(seat) {
+        return seat.vacant === false;
+      });
+      if (filledSeats.length < 1) {
+        removeFromArray(gameList, game);
+      }
     }
 
     if (game.seats && (game.seats.length >= 5 && game.seats.length <=10)) {
