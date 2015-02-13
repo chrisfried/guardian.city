@@ -149,7 +149,7 @@ function departGame(gameId, playerId) {
     } else {
       vacatedSeat.vacatorName = vacatedSeat.playerName;
       vacatedSeat.vacant = true;
-      var filledSeats = _.find(game.seats, function(seat) {
+      var filledSeats = _.filter(game.seats, function(seat) {
         return seat.vacant === false;
       });
       if (filledSeats.length < 1) {
