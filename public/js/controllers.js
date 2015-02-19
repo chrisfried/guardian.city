@@ -6,7 +6,7 @@ angular.module('heists.controllers', [])
   .controller('HomeCtrl', function($scope, $location, GameService) {
     console.info('HomeCtrl loaded');
 
-    var socket = io.connect('http://localhost:5000/');
+    var socket = io.connect();
 
     var handleError = function(err) {
       console.error(err);
@@ -51,7 +51,7 @@ angular.module('heists.controllers', [])
   .controller('GameCtrl', function($scope, $routeParams, $location, GameService){
     console.info('GameCtrl loaded');
 
-    var socket = io.connect('http://localhost:5000/');
+    var socket = io.connect();
 
     $scope.game = {};
     $scope.seat = {};
@@ -131,7 +131,7 @@ angular.module('heists.controllers', [])
     };
 
     function initSocket() {
-      socket = io.connect('http://localhost:5000/', {query: 'playerId=' + $routeParams.playerId});
+      socket = io.connect('/', {query: 'playerId=' + $routeParams.playerId});
       if(socket.connected){
         socket.emit('connectToGame', { gameId: $routeParams.gameId, playerId: $routeParams.playerId, playerName: GameService.playerName });
       }
@@ -210,7 +210,7 @@ angular.module('heists.controllers', [])
     }
 
     function initSocket() {
-      lobbySocket = io.connect('http://localhost:5000/lobby');
+      lobbySocket = io.connect('/lobby');
       if(lobbySocket.connected){
         $scope.getGames();
         $scope.getPrevious();
