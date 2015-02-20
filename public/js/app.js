@@ -5,8 +5,7 @@ angular.module('heists', [
   'ngRoute',
   'ngSanitize',
   'heists.services',
-  'heists.controllers',
-  'heists.directives'
+  'heists.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'views/lobby.html', controller:'LobbyCtrl'})
