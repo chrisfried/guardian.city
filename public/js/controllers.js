@@ -142,7 +142,7 @@ angular.module('heists.controllers', [])
 
       socket.on('updateGame', function(game) {
         console.info('updateGame');
-        console.info(game);
+      //  console.info(game);
         renderGame(game);
         $scope.$apply();
       });
