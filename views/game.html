@@ -14,9 +14,9 @@
   </div>
 
   <div ng-show="game.state !== 'pregame' && game.state !== 'roleReview'" class="gameTracker panel" ng-class="trackerClass(game)">
-    <div ng-show="game.state !== 'postGame' && game.state !== 'lastDitch'" class="panel-heading">Heist {{game.heistCount + 1}}<span ng-show="game.attemptCount > 0">, Attempt {{game.attemptCount + 1}}</span></div>
-    <div ng-show="game.state === 'lastDitch'" class="panel-heading">The Back Stabber's Last Chance</div>
-    <div ng-show="game.state === 'postGame'" class="panel-heading">{{game.minorityVictory ? 'Traitors' : 'Thieves'}} Win!</div>
+    <div ng-show="game.state !== 'postGame' && game.state !== 'lastDitch'" class="panel-heading">Burrito Party {{game.heistCount + 1}}<span ng-show="game.attemptCount > 0">, Attempt {{game.attemptCount + 1}}</span></div>
+    <div ng-show="game.state === 'lastDitch'" class="panel-heading">The Murderous Hater's Last Chance</div>
+    <div ng-show="game.state === 'postGame'" class="panel-heading">{{game.minorityVictory ? 'Burrito Haters' : 'Burrito Lovers'}} Win!</div>
     <table class="table">
       <thead>
       <tr>
@@ -27,13 +27,13 @@
       <tr>
       </thead>
     </table>
-    <div ng-show="game.double && game.state !== 'postGame'" class="panel-footer">Heist 4 requires 2 Fails to fail.</div>
+    <div ng-show="game.double && game.state !== 'postGame'" class="panel-footer">Burrito Party 4 requires 2 Fails to fail.</div>
     <ul ng-show="game.state === 'postGame'" class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.gameHistory | orderBy:'isMinority'" ng-class="seat.isMinority ? 'list-group-item-danger' : 'list-group-item-success'">
         {{seat.playerName}}
-        <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Mastermind</span>
-        <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Back Stabber</span>
-        <span class="label label-warning pull-right" ng-show="seat.isLastDitched">Stabbed</span>
+        <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Tastemaster</span>
+        <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Murderer</span>
+        <span class="label label-warning pull-right" ng-show="seat.isLastDitched">Dead</span>
       </li>
     </ul>
   </div>
@@ -48,11 +48,11 @@
       </ul>
       <div class="panel-collapse collapse" id="rules">
         <ul class="list-group">
-          <li class="list-group-item"><strong class="text-success">Thieves</strong> win the game if <strong>three heists</strong> are <strong class="text-success">successful</strong>.</li>
-          <li class="list-group-item"><strong class="text-danger">Traitors</strong> win the game if <strong>three heists</strong> are <strong class="text-danger">failed</strong>.</li>
-          <li class="list-group-item"><strong class="text-danger">Traitors</strong> know who the other <strong class="text-danger">Traitors</strong> are.</li>
-          <li class="list-group-item">The <strong class="text-success">Mastermind</strong> knows who the <strong class="text-danger">Traitors</strong> are.</li>
-          <li class="list-group-item"><strong class="text-danger">Traitors</strong> also win if the <strong class="text-danger">Back Stabber</strong> stabs the <strong class="text-success">Mastermind</strong> after three successful heists.</li>
+          <li class="list-group-item"><strong class="text-success">Burrito Lovers</strong> win the game if <strong>three parties</strong> are <strong class="text-success">successful</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Burrito Haters</strong> win the game if <strong>three parties</strong> are <strong class="text-danger">failed</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> know who the other <strong class="text-danger">Haters</strong> are.</li>
+          <li class="list-group-item">The <strong class="text-success">Tastemaster</strong> knows who the <strong class="text-danger">Haters</strong> are.</li>
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> also win if the <strong class="text-danger">Murdererous Hater</strong> murders the <strong class="text-success">Tastemaster</strong> after three successful parties.</li>
         </ul>
       </div>
       <div class="panel-footer">
@@ -66,7 +66,7 @@
   <div ng-show="(game.state === 'teamBuild' || game.state === 'teamVote' || game.state === 'postGame' || game.state === 'lastDitch') && game.heistCount > 0">
     <div ng-show="game.heistHistory[game.heistCount - 1].leader" class="panel" ng-class="game.heistHistory[game.heistCount - 1].heistSuccessful ? 'panel-success' : 'panel-danger'">
       <div class="panel-heading">
-        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Crew {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'successfully completed' : 'failed'}} Heist {{game.heistCount}}
+        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Party {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'successfully completed' : 'failed'}} Party {{game.heistCount}}
       </div>
       <ul class="list-group">
         <li ng-repeat="seat in game.heistHistory[game.heistCount - 1].team" class="list-group-item">{{seat.playerName}}</li>
@@ -83,15 +83,15 @@
     </div>
     <div ng-show="!game.heistHistory[game.heistCount - 1].leader" class="panel panel-danger">
       <div class="panel-heading">
-        Previous Heist Failed
+        Previous Party Failed
       </div>
     </div>
   </div>
 
   <div ng-show="game.state === 'teamBuild' && seat.isLeader" class="panel panel-primary">
     <div class="panel-heading">
-      <strong>You are the Leader.</strong><br />
-      Choose {{game.currentRound.teamSize}} crew members to go on Heist {{game.heistCount + 1}}.
+      <strong>You are the Party Host.</strong><br />
+      Party {{game.heistCount + 1}}: Choose {{game.currentRound.teamSize}} party invitees to pick up the burritos.
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isOnTeam ? 'list-group-item-info' :  ''" ng-click="toggleTeam(seat.playerId)">{{seat.playerName}}</li>
@@ -99,7 +99,7 @@
   </div>
   <div ng-show="game.state === 'teamBuild' && !seat.isLeader" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for {{game.currentRound.leader.playerName}} to choose {{game.currentRound.teamSize}} crew members to go on Heist {{game.heistCount + 1}}.
+      Party {{game.heistCount + 1}}: Waiting for {{game.currentRound.leader.playerName}} to choose {{game.currentRound.teamSize}} party invitees to pick up the burritos.
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isOnTeam ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -108,22 +108,22 @@
 
   <div ng-show="game.state === 'heist' && seat.isOnTeam && !seat.hasHeistVoted" class="panel panel-primary">
     <div class="panel-heading">
-      You're on the Heist!
+      You were selected to bring the burritos!
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.currentRound.team" class="list-group-item" ng-class="seat.hasHeistVoted ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
     </ul>
     <div class="panel-body">
-      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(true)">Succeed</button>
-      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && !seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(false)">Fail</button>
+      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(true)">Burritos</button>
+      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && !seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(false)">Pizza</button>
     </div>
     <div class="panel-footer">
-      <strong class="text-danger">{{game.heistCount === 3 && game.double ? '2 Fails' : '1 Fail'}}</strong> will result in a Failed Heist.
+      <strong class="text-danger">{{game.heistCount === 3 && game.double ? '2 Non-Burrito' : '1 Non-Burrito'}}</strong> will result in a Failed Party.
     </div>
   </div>
   <div ng-show="game.state === 'heist' && (!seat.isOnTeam || seat.hasHeistVoted)" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Crew to return from Heist {{game.heistCount + 1}}...
+      {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Party {{game.heistCount + 1}}: Waiting for burritos...
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.currentRound.team" class="list-group-item" ng-class="seat.hasHeistVoted ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -132,7 +132,7 @@
 
   <div ng-show="game.state === 'teamVote'" class="panel panel-primary">
     <div class="panel-heading">
-      {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Crew for Heist {{game.heistCount + 1}}
+      {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} burrito fetchers for Party {{game.heistCount + 1}}
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.currentRound.team" class="list-group-item">{{seat.playerName}}</li>
@@ -140,20 +140,20 @@
     <div class="panel-body">
       <div class="btn-group btn-group-justified" role="group">
         <div class="btn-group">
-          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && seat.teamVote ? 'btn-success' : 'btn-default'" ng-click="teamVote(true)">Approve</button>
+          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && seat.teamVote ? 'btn-success' : 'btn-default'" ng-click="teamVote(true)">Attend Party</button>
         </div>
         <div class="btn-group">
-          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && !seat.teamVote ? 'btn-danger' : 'btn-default'" ng-click="teamVote(false)">Reject</button>
+          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && !seat.teamVote ? 'btn-danger' : 'btn-default'" ng-click="teamVote(false)">Stay Home</button>
         </div>
       </div>
     </div>
     <div class="panel-footer">
-      {{game.requiredApprovals}} Approve votes required to send {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Crew on Heist {{game.heistCount + 1}}.
+      {{game.requiredApprovals}} Attendees required to have {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Party {{game.heistCount + 1}}.
     </div>
   </div>
   <div ng-show="game.state === 'teamVote' || game.state === 'heist'" class="panel panel-default">
     <div class="panel-heading">
-      Votes for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Crew
+      Votes for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} burrito fetchers
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seatHasVotedClass(seat)">{{seat.playerName}}</li>
@@ -162,7 +162,7 @@
 
   <div ng-show="seat.isReady" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for other players...
+      Waiting for other partiers...
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-class="seat.isReady ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -171,7 +171,7 @@
 
   <div ng-show="game.state === 'lastDitch' && seat.isLastDitch" class="panel panel-primary">
     <div class="panel-heading">
-      Literally stab the Mastermind in the back.
+      Poison the Tastemaster's burrito.
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="!seat.isMinority" ng-click="lastDitch(seat.playerId)">{{seat.playerName}}</li>
@@ -179,7 +179,7 @@
   </div>
   <div ng-show="game.state === 'lastDitch' && !seat.isLastDitch" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for the Back Stabber.
+      Waiting for the Murderous Hater.
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="seat.isLastDitch">{{seat.playerName}}</li>
@@ -194,11 +194,11 @@
     </div>
     <div class="panel-collapse collapse" id="role">
       <div class="panel-body">
-        <p>You are <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.roleName}}</strong>. You win if three heists <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.isMinority ? 'Fail' : 'Succeed'}}</strong>.</p>
+        <p>You are <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.roleName}}</strong>. You win if three parties <strong ng-class="seat.isMinority ? 'text-danger' : 'text-success'">{{seat.isMinority ? 'Fail' : 'Succeed'}}</strong>.</p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            The <strong class="text-danger">Traitors</strong> are:
+            The <strong class="text-danger">Haters</strong> are:
           </div>
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="traitor in game.minority">{{seat.isMinority || seat.isAllKnowing ? traitor.playerName : 'Unknown'}}</li>

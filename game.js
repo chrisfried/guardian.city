@@ -108,7 +108,7 @@ function joinGame(game, player) {
       heistVote: false,
       vacant: false,
       vacatorName: '',
-      roleName: 'a Thief'
+      roleName: 'a Burrito Lover'
     };
     game.seats.push(newSeat);
   }
@@ -207,22 +207,22 @@ function startGame(gameId) {
           seat.teamVote = false;
           seat.hasHeistVoted = false;
           seat.heistVote = false;
-          seat.roleName = 'a Thief';
+          seat.roleName = 'a Burrito Lover';
       });
 
       game.seats = _.shuffle(game.seats);
       game.seats[0].isAllKnowing = true;
-      game.seats[0].roleName = 'the Mastermind';
+      game.seats[0].roleName = 'the Tastemaster';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
-      game.seats[1].roleName = 'the Back Stabber';
+      game.seats[1].roleName = 'the Murdereous Hater';
       game.minority.push(game.seats[1]);
 
       var nextSeat = 2;
       var remainingMinority = game.minorityCount - 1;
       while (remainingMinority > 0) {
         game.seats[nextSeat].isMinority = true;
-        game.seats[nextSeat].roleName = 'a Traitor';
+        game.seats[nextSeat].roleName = 'a Burrito Hater';
         game.minority.push(game.seats[nextSeat]);
         nextSeat++;
         remainingMinority--;
