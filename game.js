@@ -82,6 +82,11 @@ function addGame(game) {
   game.readyToStart = false;
   game.isStarted = false;
   game.state = 'pregame';
+  game.nonburritos = [
+    'Spoiled Milk',
+    'Gluten Free Pizza',
+    'Half Baked Fish Sticks'
+  ]
   gameList.push(game);
   return game;
 }
