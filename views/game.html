@@ -66,7 +66,7 @@
   <div ng-show="(game.state === 'teamBuild' || game.state === 'teamVote' || game.state === 'postGame' || game.state === 'lastDitch') && game.heistCount > 0">
     <div ng-show="game.heistHistory[game.heistCount - 1].leader" class="panel" ng-class="game.heistHistory[game.heistCount - 1].heistSuccessful ? 'panel-success' : 'panel-danger'">
       <div class="panel-heading">
-        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Party {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'successfully completed' : 'failed'}} Party {{game.heistCount}}
+        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Burrito Party was a {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'Success' : 'Failure'}}
       </div>
       <ul class="list-group">
         <li ng-repeat="seat in game.heistHistory[game.heistCount - 1].team" class="list-group-item">{{seat.playerName}}</li>
@@ -99,7 +99,7 @@
   </div>
   <div ng-show="game.state === 'teamBuild' && !seat.isLeader" class="panel panel-info">
     <div class="panel-heading">
-      Party {{game.heistCount + 1}}: Waiting for {{game.currentRound.leader.playerName}} to choose {{game.currentRound.teamSize}} party goers to pick up the burritos.
+      Party {{game.heistCount + 1}}: Waiting for {{game.currentRound.leader.playerName}} to choose {{game.currentRound.teamSize}} party goers to pick up the burritos...
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isOnTeam ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -123,7 +123,7 @@
   </div>
   <div ng-show="game.state === 'heist' && (!seat.isOnTeam || seat.hasHeistVoted)" class="panel panel-info">
     <div class="panel-heading">
-      {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Party {{game.heistCount + 1}}: Waiting for burritos...
+      At {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Party, waiting for the burritos...
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.currentRound.team" class="list-group-item" ng-class="seat.hasHeistVoted ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -148,12 +148,12 @@
       </div>
     </div>
     <div class="panel-footer">
-      {{game.requiredApprovals}} Attendees required to have {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Party {{game.heistCount + 1}}.
+      {{game.requiredApprovals}} attendees required for {{seat.isLeader ? 'you' : game.currentRound.leader.playerName}} to host Party {{game.heistCount + 1}}.
     </div>
   </div>
   <div ng-show="game.state === 'teamVote' || game.state === 'heist'" class="panel panel-default">
     <div class="panel-heading">
-      Guest list for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Burrito Party
+      RSVPs for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Burrito Party
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seatHasVotedClass(seat)">{{seat.playerName}}</li>
@@ -179,7 +179,7 @@
   </div>
   <div ng-show="game.state === 'lastDitch' && !seat.isLastDitch" class="panel panel-info">
     <div class="panel-heading">
-      Waiting for the Murderous Hater.
+      Waiting for the Murderous Hater...
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="seat.isLastDitch">{{seat.playerName}}</li>
