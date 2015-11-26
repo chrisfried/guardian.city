@@ -99,7 +99,9 @@ function addGame(game) {
     'Assorted Rinds',
     'Irradiated Potato Crisps'
   ]
-  game.nonburrito = _.sample(game.nonburritos);
+  game.nonburrito = function() {
+    return _.sample(game.nonburritos);
+  }
   gameList.push(game);
   return game;
 }
