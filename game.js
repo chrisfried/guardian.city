@@ -87,9 +87,7 @@ function addGame(game) {
     'Gluten Free Pizza',
     'Half Baked Fish Sticks'
   ]
-  game.nonburrito = function() {
-    return _.sample(game.nonburritos);
-  }
+  game.nonburrito = _.sample(game.nonburritos);
   gameList.push(game);
   return game;
 }
