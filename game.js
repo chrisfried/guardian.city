@@ -85,7 +85,19 @@ function addGame(game) {
   game.nonburritos = [
     'Spoiled Milk',
     'Gluten Free Pizza',
-    'Half Baked Fish Sticks'
+    'Half Baked Fish Sticks',
+    'Soupy Coleslaw',
+    'Cold French Fries',
+    'Stale Cake',
+    'Bruised Apples',
+    'Sack of Raw Kale',
+    'Cat Food',
+    'Lutefisk',
+    'Salad Loaf',
+    'Blood Sausage',
+    'Fish Pudding',
+    'Assorted Rinds',
+    'Irradiated Potato Crisps'
   ]
   game.nonburrito = _.sample(game.nonburritos);
   gameList.push(game);
