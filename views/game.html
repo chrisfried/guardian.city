@@ -115,7 +115,7 @@
     </ul>
     <div class="panel-body">
       <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(true)">Burritos</button>
-      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && !seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(false)">{{_.sample(game.nonburritos)}}</button>
+      <button class="btn btn-block btn-lg" ng-class="seat.hasHeistVoted && !seat.heistVote ? 'btn-primary' : 'btn-default'" ng-click="heistVote(false)">{{game.nonburrito()}}</button>
     </div>
     <div class="panel-footer">
       <strong class="text-danger">{{game.heistCount === 3 && game.double ? '2 Non-Burrito' : '1 Non-Burrito'}}</strong> will result in a Failed Party.
