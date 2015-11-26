@@ -99,9 +99,7 @@ function addGame(game) {
     'Assorted Rinds',
     'Irradiated Potato Crisps'
   ]
-  game.nonburrito = function() {
-    return _.sample(game.nonburritos);
-  }
+  game.nonburrito = _.sample(game.nonburritos);
   gameList.push(game);
   return game;
 }
@@ -257,6 +255,7 @@ function startGame(gameId) {
 
 function newRound(gameId) {
   var game = getGame(gameId);
+  game.nonburrito = _.sample(game.nonburritos);
   if (game.state === 'roleReview' || game.state === 'heist' || game.state === 'teamVote') {
     if (game.currentRound) {
       if (game.currentRound.teamAccepted) {
