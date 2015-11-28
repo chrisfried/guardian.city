@@ -94,10 +94,21 @@ function addGame(game) {
     'Cat Food',
     'Lutefisk',
     'Salad Loaf',
-    'Blood Sausage',
+    'Sausage Casings',
     'Fish Pudding',
     'Assorted Rinds',
-    'Irradiated Potato Crisps'
+    'Irradiated Potato Crisps',
+    'Boiled Socks',
+    'Mixed Nuts with the Cashews picked out',
+    'Pineapple Skins',
+    'A Tub of Lard',
+    'Minced Broccoli',
+    'An Old Tire',
+    'Several Quarts of Deer Blood',
+    'Fish Bones',
+    'Unset Jello',
+    'Rebar',
+    'Salad Fingers'
   ]
   game.nonburrito = _.sample(game.nonburritos);
   gameList.push(game);
