@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var gameList = [];
+var ua = require('universal-analytics');
+var visitor = ua('UA-7101261-7');
 
 var variants = [
   {
@@ -112,6 +114,7 @@ function addGame(game) {
   ]
   game.nonburrito = _.sample(game.nonburritos);
   gameList.push(game);
+  visitor.event("Game", "new game created").send();
   return game;
 }
 
@@ -140,6 +143,7 @@ function joinGame(game, player) {
       roleName: 'a Burrito Lover'
     };
     game.seats.push(newSeat);
+    visitor.event("Player", "player joined game").send();
   }
 
   if (game.seats && (game.seats.length >= 5 && game.seats.length <=10)) {
@@ -157,6 +161,7 @@ function joinGame(game, player) {
       oldSeat.playerName = player.name;
       oldSeat.vacatorName = '';
       oldSeat.vacant = false;
+      visitor.event("Player", "player rejoined game").send();
     }
   }
 
@@ -175,6 +180,7 @@ function departGame(gameId, playerId) {
       if (game.seats.length < 1) {
         removeFromArray(gameList, game);
       }
+      visitor.event("Player", "player departed before game started").send();
     } else {
       vacatedSeat.vacatorName = vacatedSeat.playerName;
       vacatedSeat.vacant = true;
@@ -184,6 +190,7 @@ function departGame(gameId, playerId) {
       if (filledSeats.length < 1) {
         removeFromArray(gameList, game);
       }
+      visitor.event("Player", "player departed game in progress").send();
     }
 
     if (game.seats && (game.seats.length >= 5 && game.seats.length <=10)) {
@@ -260,6 +267,8 @@ function startGame(gameId) {
       game.seats = _.shuffle(game.seats);
       game.seats[0].isLeader = true;
       game.state = 'roleReview';
+      visitor.event("Game", "game started").send();
+      visitor.event("Player Count", playerCount + " player game");
     }
   }
 }
@@ -300,6 +309,7 @@ function newRound(gameId) {
 
     if (game.minorityHeistWins >= 3) {
       game.minorityVictory = true;
+      visitor.event("Game", "haters win").send();
       finishGame(gameId);
     } else if (game.majorityHeistWins >= 3) {
       game.state = 'lastDitch';
@@ -411,7 +421,9 @@ function teamVote(gameId, playerId, vote) {
       if (yesVotes.length > game.seats.length/2) {
         game.currentRound.teamAccepted = true;
         game.state = 'heist';
+        visitor.event("Round", "party accepted").send();
       } else {
+        visitor.event("Round", "party rejected").send();
         newRound(gameId);
       }
     }
@@ -450,9 +462,11 @@ function heistVote(gameId, playerId, vote) {
       });
       if (yesVotes.length === game.currentRound.team.length || (game.double && game.currentRound.heist === 3 && yesVotes.length === game.currentRound.team.length - 1)) {
         game.majorityHeistWins++;
+        visitor.event("Round", "party succeeded").send();
       } else {
         game.currentRound.heistSuccessful = false;
         game.minorityHeistWins++;
+        visitor.event("Round", "party failed").send();
       }
       game.currentRound.completed = true;
       game.heistHistory[game.heistCount].heistSuccessful = game.currentRound.heistSuccessful;
@@ -474,6 +488,11 @@ function lastDitch(gameId, playerId) {
     if (seat.isAllKnowing) {
       game.minorityVictory = true;
       game.lastDitchSuccessful = true;
+      visitor.event("Game", "haters win").send();
+      visitor.event("Game", "backstab successful").send();
+    } else {
+      visitor.event("Game", "lovers win").send();
+      visitor.event("Game", "backstab failed").send();
     }
     finishGame(gameId);
   }
