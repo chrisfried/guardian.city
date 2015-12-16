@@ -41,15 +41,18 @@ angular.module('heists.services', [])
       },
       createGame: function() {
         return $http.post('/add', { id: guid(), name: this.playerName + "'s game" });
+        ga('send', 'pageview', '/game/create', {title: 'Create Game'});
       },
       listPrevious: function(gameId) {
         return $http.post("/listPrevious", { gameId: gameId });
       },
       joinGame: function(gameId, playerId, name) {
         return $http.post("/joinGame", { gameId: gameId, playerId: playerId, playerName: name });
+        ga('send', 'pageview', '/game/join', {title: 'Join Game'});
       },
       departGame: function(gameId, playerId) {
         $http.post('/departGame', { gameId: gameId, playerId: playerId});
+        ga('send', 'pageview', '/game/leave', {title: 'Leave Game'});
       },
       startGame: function(gameId){
         $http.post("/startGame", { gameId: gameId});
@@ -62,12 +65,15 @@ angular.module('heists.services', [])
       },
       teamVote: function(gameId, playerId, vote) {
         $http.post('/teamVote', { gameId: gameId, playerId: playerId, vote: vote});
+        ga('send', 'pageview', '/game/approval/' . vote, {title: 'Approval Vote'});
       },
       heistVote: function(gameId, playerId, vote) {
         $http.post('/heistVote', { gameId: gameId, playerId: playerId, vote: vote});
+        ga('send', 'pageview', '/game/vote/' . vote, {title: 'Burrito Vote'});
       },
       lastDitch: function(gameId, playerId) {
         $http.post('/lastDitch', { gameId: gameId, playerId: playerId});
+        ga('send', 'pageview', '/game/backstab', {title: 'Backstab'});
       },
     }
   });
