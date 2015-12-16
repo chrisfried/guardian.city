@@ -12,7 +12,7 @@
       <label for="nameInput">Choose a Name</label><input type="text" id="nameInput" class="form-control ng-pristine ng-valid" placeholder="Your name here" ng-model="gameSvc.playerName">
     </div>
   </form>
-  <div ng-show="gameSvc.playerName">
+  <div ng-show="gameSvc.playerName" style="margin-bottom: 15px;">
     <button ng-repeat="game in previousGames" class="btn btn-primary btn-block btn-lg" ng-click="joinGame(game.id)">Rejoin Previous Game</button>
     <button class="btn btn-primary btn-block btn-lg" ng-click="createGame()">Host New Game</button>
     <hr />
@@ -23,6 +23,29 @@
           <button ng-click="joinGame(game.id)" type="button" class="btn btn-primary" style="margin-right: 10px;">Join Game</button>
           <span style="font-size: larger">{{game.name}} - {{game.playerCount}} players</span>
         </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-collapse collapse" id="rules">
+        <ul class="list-group">
+          <li class="list-group-item">This game invites 5-10 <strong class="text-success">Burrito Lovers</strong> and <strong class="text-danger">Burrito Haters</strong> to a series of five <strong>Burrito Parties</strong>.</li>
+        </ul>
+        <ul class="list-group">
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> are <strong>known</strong> to other <strong class="text-danger">Haters</strong> and to the <strong class="text-success">Tastemaster</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> are <strong>hidden</strong> from all other <strong class="text-success">Lovers</strong>.</li>
+        </ul>
+        <ul class="list-group">
+          <li class="list-group-item"><strong class="text-success">Lovers</strong> win the game if <strong>three</strong> Burrito Parties are <strong class="text-success">successful</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> win the game if <strong>three</strong> Burrito Parties are <strong class="text-danger">failures</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">Haters</strong> also win if the <strong class="text-danger">Murdererous Hater</strong> murders the <strong class="text-success">Tastemaster</strong> after three <strong class="text-success">successful</strong> parties.</li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-default btn-block" data-toggle="collapse" data-target="#rules" href="#rules">
+          Tap to show/hide game rules.
+        </button>
       </div>
     </div>
   </div>
