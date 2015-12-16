@@ -4,7 +4,6 @@
 
 angular.module('heists.controllers', [])
   .controller('HomeCtrl', function($scope, $location, GameService) {
-    console.info('HomeCtrl loaded');
 
     var socket = io.connect();
 
@@ -16,19 +15,15 @@ angular.module('heists.controllers', [])
     $scope.inLobby = true;
 
     $scope.createGame = function() {
-      console.info('createGame called');
       GameService.initName();
       GameService.createGame()
         .then(function(success) {
-          //navigate to the new game
-          console.info(success);
           $scope.joinGame(success.data.id);
         }, handleError);
       $scope.$apply;
     };
 
     $scope.joinGame = function(gameId) {
-      console.info('joinGame called for gameId ' + gameId);
       GameService.initName();
       $location.url("/game/"+ gameId + "/pId/" + GameService.playerId + "/name/" + GameService.playerName);
     };
@@ -51,8 +46,6 @@ angular.module('heists.controllers', [])
 
   })
   .controller('GameCtrl', function($scope, $routeParams, $location, GameService){
-    console.info('GameCtrl loaded');
-
     var socket = io.connect();
 
     $scope.game = {};
@@ -138,13 +131,10 @@ angular.module('heists.controllers', [])
         socket.emit('connectToGame', { gameId: $routeParams.gameId, playerId: $routeParams.playerId, playerName: GameService.playerName });
       }
       socket.on('connect', function() {
-        console.info('game socket connect');
         socket.emit('connectToGame', { gameId: $routeParams.gameId, playerId: $routeParams.playerId, playerName: GameService.playerName });
       });
 
       socket.on('updateGame', function(game) {
-        console.info('updateGame');
-      //  console.info(game);
         renderGame(game);
         $scope.$apply();
       });
@@ -175,7 +165,6 @@ angular.module('heists.controllers', [])
     $scope.$emit('enterGame');
 
     $scope.$on('$destroy', function(event) {
-      console.info('leaving GameCtrl');
       if($scope.game){
         GameService.departGame($scope.game.id, $scope.playerId);
       }
@@ -186,7 +175,6 @@ angular.module('heists.controllers', [])
       $scope.joinGame(window.localStorage["gameId"]);
     }
 
-    console.info('LobbyCtrl loaded');
     var lobbySocket;
 
     $scope.availableGames = [];
@@ -197,7 +185,6 @@ angular.module('heists.controllers', [])
       GameService.getGames()
         .then(function(success) {
           var games = success.data;
-          console.info('getGames returned ' + games.length + ' items');
           $scope.availableGames = games;
       });
     };
@@ -206,7 +193,6 @@ angular.module('heists.controllers', [])
       GameService.listPrevious(window.localStorage["previousGameId"])
         .then(function(success) {
           var previousGames = success.data;
-          console.info('previousGames returned ' + previousGames.length + ' items');
           $scope.previousGames = previousGames;
       });
     }
@@ -218,19 +204,15 @@ angular.module('heists.controllers', [])
         $scope.getPrevious();
       }
       lobbySocket.on('connect', function() {
-        console.info('lobby socket connect');
       });
 
       lobbySocket.on('lobbyJoin', function(gameList) {
-        console.info('lobbySocket: lobbyJoin');
         $scope.availableGames = gameList;
         $scope.getPrevious();
         $scope.$apply();
       });
 
       lobbySocket.on('gameAdded', function(gameList) {
-        console.info('gameAdded');
-        console.info(gameList);
         $scope.availableGames = gameList;
         $scope.getPrevious();
         $scope.$apply();

@@ -29,14 +29,12 @@ function gameViewModel(gameId) {
 var lobbySocket = io
   .of('/lobby')
   .on('connection', function(socket) {
-    console.info('lobby socket connect');
     var gameList = Game.listAvailable();
     socket.emit('lobbyJoin', gameList);
   });
 
 io.sockets.on('connection', function(socket) {
   socket.on('connectToGame', function(data) {
-    console.info(data.playerName + ' connected to Game ' + data.gameId);
     var game = Game.getGame(data.gameId);
     if(game){
       socket.gameId = data.gameId;
@@ -50,7 +48,6 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('disconnect', function() {
     if(socket.playerId && socket.gameId){
-      console.info(socket.playerId + ' disconnected');
       Game.departGame(socket.gameId, socket.playerId);
       broadcastGame(socket.gameId);
       lobbySocket.emit('gameAdded', Game.listAvailable());
