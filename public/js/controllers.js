@@ -41,10 +41,12 @@ angular.module('heists.controllers', [])
 
     $scope.$on('enterLobby', function() {
       $scope.inLobby = true;
+      ga('send', 'pageview', '/lobby', {title: 'Lobby'});
     });
 
     $scope.$on('enterGame', function() {
       $scope.inLobby = false;
+      ga('send', 'pageview', '/game', {title: 'Game'});
     })
 
   })
@@ -99,6 +101,7 @@ angular.module('heists.controllers', [])
 
     $scope.startGame = function() {
       GameService.startGame($scope.gameId);
+      ga('send', 'event', 'Game', 'new game started');
     };
 
     $scope.ready = function() {
@@ -111,14 +114,17 @@ angular.module('heists.controllers', [])
 
     $scope.teamVote = function(vote) {
       GameService.teamVote($scope.gameId, $scope.playerId, vote);
+      ga('send', 'event', 'Game', 'attendance vote cast', vote);
     };
 
     $scope.heistVote = function(vote) {
       GameService.heistVote($scope.gameId, $scope.playerId, vote);
+      ga('send', 'event', 'Game', 'burrito vote cast', vote);
     };
 
     $scope.lastDitch = function(playerId) {
       GameService.lastDitch($scope.gameId, playerId);
+      ga('send', 'event', 'Game', 'backstab attempted');
     };
 
     function renderGame(game) {
