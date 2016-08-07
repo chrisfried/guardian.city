@@ -18,8 +18,12 @@
   height: 25px;
   margin: 0 auto;
 }
+.navbar-header {
+  width: 100%;
+}
 .navbar-inverse .navbar-brand {
   width: 100%;
+  color: white;
 }
 .btn-default:hover {
   border-color: #ccc;
