@@ -84,7 +84,7 @@ function addGame(game) {
   game.readyToStart = false;
   game.isStarted = false;
   game.state = 'pregame';
-  game.nonburritos = [
+  game.strikes = [
     'Spoiled Milk',
     'Gluten Free Pizza',
     'Half Baked Fish Sticks',
@@ -112,7 +112,7 @@ function addGame(game) {
     'Rebar',
     'Salad Fingers'
   ]
-  game.nonburrito = _.sample(game.nonburritos);
+  game.strike = _.sample(game.strikes);
   gameList.push(game);
   visitor.event("Game", "new game created").send();
   return game;
@@ -140,7 +140,7 @@ function joinGame(game, player) {
       heistVote: false,
       vacant: false,
       vacatorName: '',
-      roleName: 'a Burrito Lover'
+      roleName: 'a Guardian'
     };
     game.seats.push(newSeat);
     visitor.event("Player", "player joined game").send();
@@ -243,22 +243,22 @@ function startGame(gameId) {
           seat.teamVote = false;
           seat.hasHeistVoted = false;
           seat.heistVote = false;
-          seat.roleName = 'a Burrito Lover';
+          seat.roleName = 'a Guardian';
       });
 
       game.seats = _.shuffle(game.seats);
       game.seats[0].isAllKnowing = true;
-      game.seats[0].roleName = 'the Tastemaster';
+      game.seats[0].roleName = 'Jaren Ward';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
-      game.seats[1].roleName = 'the Murdereous Hater';
+      game.seats[1].roleName = 'Dredgen Yor';
       game.minority.push(game.seats[1]);
 
       var nextSeat = 2;
       var remainingMinority = game.minorityCount - 1;
       while (remainingMinority > 0) {
         game.seats[nextSeat].isMinority = true;
-        game.seats[nextSeat].roleName = 'a Burrito Hater';
+        game.seats[nextSeat].roleName = 'a Corrupted Guardian';
         game.minority.push(game.seats[nextSeat]);
         nextSeat++;
         remainingMinority--;
@@ -309,7 +309,7 @@ function newRound(gameId) {
 
     if (game.minorityHeistWins >= 3) {
       game.minorityVictory = true;
-      visitor.event("Game", "haters win").send();
+      visitor.event("Game", "corrupted win").send();
       finishGame(gameId);
     } else if (game.majorityHeistWins >= 3) {
       game.state = 'lastDitch';
@@ -421,9 +421,9 @@ function teamVote(gameId, playerId, vote) {
       if (yesVotes.length > game.seats.length/2) {
         game.currentRound.teamAccepted = true;
         game.state = 'heist';
-        visitor.event("Round", "party accepted").send();
+        visitor.event("Round", "fireteam accepted").send();
       } else {
-        visitor.event("Round", "party rejected").send();
+        visitor.event("Round", "fireteam rejected").send();
         newRound(gameId);
       }
     }
@@ -462,11 +462,11 @@ function heistVote(gameId, playerId, vote) {
       });
       if (yesVotes.length === game.currentRound.team.length || (game.double && game.currentRound.heist === 3 && yesVotes.length === game.currentRound.team.length - 1)) {
         game.majorityHeistWins++;
-        visitor.event("Round", "party succeeded").send();
+        visitor.event("Round", "strike succeeded").send();
       } else {
         game.currentRound.heistSuccessful = false;
         game.minorityHeistWins++;
-        visitor.event("Round", "party failed").send();
+        visitor.event("Round", "strike failed").send();
       }
       game.currentRound.completed = true;
       game.heistHistory[game.heistCount].heistSuccessful = game.currentRound.heistSuccessful;
@@ -488,11 +488,11 @@ function lastDitch(gameId, playerId) {
     if (seat.isAllKnowing) {
       game.minorityVictory = true;
       game.lastDitchSuccessful = true;
-      visitor.event("Game", "haters win").send();
-      visitor.event("Game", "backstab successful").send();
+      visitor.event("Game", "corrupted win").send();
+      visitor.event("Game", "thorn success").send();
     } else {
-      visitor.event("Game", "lovers win").send();
-      visitor.event("Game", "backstab failed").send();
+      visitor.event("Game", "guardians win").send();
+      visitor.event("Game", "thorn failed").send();
     }
     finishGame(gameId);
   }

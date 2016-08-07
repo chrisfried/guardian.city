@@ -1,17 +1,17 @@
 {
-  "name": "burritoparty",
-  "version": "0.0.2",
+  "name": "guardian.city",
+  "version": "0.0.3",
   "engines": {
     "node": "0.12.x"
   },
-  "description": "A game of burrito lovers and haters.",
+  "description": "A game of Guardians.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/chrisfried/heists.git"
+    "url": "git://github.com/chrisfried/guardian.city.git"
   },
   "author": "Chris Fried",
   "dependencies": {
