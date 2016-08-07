@@ -44,11 +44,11 @@
         The Game
       </div>
       <ul class="list-group">
-        <li class="list-group-item"><strong class="text-success">{{game.seats.length - game.minorityCount}} Guardians</strong> vs <strong class="text-danger">{{game.minorityCount}} Corrupted</strong></li>
+        <li class="list-group-item"><strong class="text-success">{{game.seats.length - game.minorityCount}} Guardians</strong> vs <strong class="text-danger">{{game.minorityCount}} Corrupted Guardians</strong></li>
       </ul>
       <div class="panel-collapse collapse" id="rules">
         <ul class="list-group">
-          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>known</strong> to other <strong class="text-danger">Corrupted</strong> and to <strong class="text-success">Jaren Ward</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>known</strong> to other <strong class="text-danger">Corrupted Guardians</strong> and to <strong class="text-success">Jaren Ward</strong>.</li>
           <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>hidden</strong> from all other <strong class="text-success">Guardians</strong>.</li>
         </ul>
         <ul class="list-group">
@@ -68,7 +68,7 @@
   <div ng-show="(game.state === 'teamBuild' || game.state === 'teamVote' || game.state === 'postGame' || game.state === 'lastDitch') && game.heistCount > 0">
     <div ng-show="game.heistHistory[game.heistCount - 1].leader" class="panel" ng-class="game.heistHistory[game.heistCount - 1].heistSuccessful ? 'panel-success' : 'panel-danger'">
       <div class="panel-heading">
-        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Strike was a {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'Success' : 'Failure'}}
+        {{game.heistHistory[game.heistCount - 1].leader.playerName}}'s Fireteam {{game.heistHistory[game.heistCount - 1].heistSuccessful ? 'Completed the Strike' : 'was Consumed by Darkness'}} 
       </div>
       <ul class="list-group">
         <li ng-repeat="seat in game.heistHistory[game.heistCount - 1].team" class="list-group-item">{{seat.playerName}}</li>
@@ -101,7 +101,7 @@
   </div>
   <div ng-show="game.state === 'teamBuild' && !seat.isLeader" class="panel panel-info">
     <div class="panel-heading">
-      Strike {{game.heistCount + 1}}: Waiting for {{game.currentRound.leader.playerName}} to choose {{game.currentRound.teamSize}} Guardians to run this Strike...
+      Strike {{game.heistCount + 1}}: Waiting for {{game.currentRound.leader.playerName}} to assign {{game.currentRound.teamSize}} Guardians to a Fireteam...
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.seats" class="list-group-item" ng-class="seat.isOnTeam ? 'list-group-item-info' :  ''">{{seat.playerName}}</li>
@@ -134,7 +134,7 @@
 
   <div ng-show="game.state === 'teamVote'" class="panel panel-primary">
     <div class="panel-heading">
-      Fireteam for {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Strike
+      {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Fireteam
     </div>
     <ul class="list-group">
       <li ng-repeat="seat in game.currentRound.team" class="list-group-item">{{seat.playerName}}</li>
@@ -142,15 +142,15 @@
     <div class="panel-body">
       <div class="btn-group btn-group-justified" role="group">
         <div class="btn-group">
-          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && seat.teamVote ? 'btn-success' : 'btn-default'" ng-click="teamVote(true)">Approve Fireteam</button>
+          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && seat.teamVote ? 'btn-success' : 'btn-default'" ng-click="teamVote(true)">Approve</button>
         </div>
         <div class="btn-group">
-          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && !seat.teamVote ? 'btn-danger' : 'btn-default'" ng-click="teamVote(false)">Reject Fireteam</button>
+          <button class="btn btn-lg" ng-class="seat.hasTeamVoted && !seat.teamVote ? 'btn-danger' : 'btn-default'" ng-click="teamVote(false)">Reject</button>
         </div>
       </div>
     </div>
     <div class="panel-footer">
-      {{game.requiredApprovals}} approvals required to launch {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Strike {{game.heistCount + 1}}.
+      {{game.requiredApprovals}} approvals required to send {{seat.isLeader ? 'Your' : game.currentRound.leader.playerName + "'s"}} Fireteam on Strike {{game.heistCount + 1}}.
     </div>
   </div>
   <div ng-show="game.state === 'teamVote' || game.state === 'heist'" class="panel panel-default">
@@ -200,7 +200,7 @@
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            The <strong class="text-danger">Corrupted</strong> are:
+            <strong class="text-danger">The Corrupted</strong> are:
           </div>
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="traitor in game.minority">{{seat.isMinority || seat.isAllKnowing ? traitor.playerName : 'Unknown'}}</li>
