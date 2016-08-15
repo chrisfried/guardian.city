@@ -84,34 +84,7 @@ function addGame(game) {
   game.readyToStart = false;
   game.isStarted = false;
   game.state = 'pregame';
-  game.strikes = [
-    'Spoiled Milk',
-    'Gluten Free Pizza',
-    'Half Baked Fish Sticks',
-    'Soupy Coleslaw',
-    'Cold French Fries',
-    'Stale Cake',
-    'Bruised Apples',
-    'Sack of Raw Kale',
-    'Cat Food',
-    'Lutefisk',
-    'Salad Loaf',
-    'Sausage Casings',
-    'Fish Pudding',
-    'Assorted Rinds',
-    'Irradiated Potato Crisps',
-    'Boiled Socks',
-    'Mixed Nuts with the Cashews picked out',
-    'Pineapple Skins',
-    'A Tub of Lard',
-    'Minced Broccoli',
-    'An Old Tire',
-    'Several Quarts of Deer Blood',
-    'Fish Bones',
-    'Unset Jello',
-    'Rebar',
-    'Salad Fingers'
-  ]
+  game.strikes = [] // Add strike names to display as flavor.
   game.strike = _.sample(game.strikes);
   gameList.push(game);
   visitor.event("Game", "new game created").send();
@@ -258,7 +231,7 @@ function startGame(gameId) {
       var remainingMinority = game.minorityCount - 1;
       while (remainingMinority > 0) {
         game.seats[nextSeat].isMinority = true;
-        game.seats[nextSeat].roleName = 'a Corrupted Guardian';
+        game.seats[nextSeat].roleName = 'a Renegade';
         game.minority.push(game.seats[nextSeat]);
         nextSeat++;
         remainingMinority--;
@@ -309,7 +282,7 @@ function newRound(gameId) {
 
     if (game.minorityHeistWins >= 3) {
       game.minorityVictory = true;
-      visitor.event("Game", "corrupted win").send();
+      visitor.event("Game", "renegades win").send();
       finishGame(gameId);
     } else if (game.majorityHeistWins >= 3) {
       game.state = 'lastDitch';
@@ -488,7 +461,7 @@ function lastDitch(gameId, playerId) {
     if (seat.isAllKnowing) {
       game.minorityVictory = true;
       game.lastDitchSuccessful = true;
-      visitor.event("Game", "corrupted win").send();
+      visitor.event("Game", "renegades win").send();
       visitor.event("Game", "thorn success").send();
     } else {
       visitor.event("Game", "guardians win").send();
