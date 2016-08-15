@@ -15,7 +15,7 @@
 
   <div ng-show="game.state !== 'pregame' && game.state !== 'roleReview'" class="gameTracker panel" ng-class="trackerClass(game)">
     <div ng-show="game.state !== 'postGame' && game.state !== 'lastDitch'" class="panel-heading">Strike {{game.heistCount + 1}}<span ng-show="game.attemptCount > 0">, Fireteam {{game.attemptCount + 1}}</span></div>
-    <div ng-show="game.state === 'lastDitch'" class="panel-heading">Dredgen Yor's Last Chance</div>
+    <div ng-show="game.state === 'lastDitch'" class="panel-heading">Dredgen Yor's Last Word</div>
     <div ng-show="game.state === 'postGame'" class="panel-heading">{{game.minorityVictory ? 'The Darkness' : 'Guardians'}} Win!</div>
     <table class="table">
       <thead>
@@ -31,7 +31,7 @@
     <ul ng-show="game.state === 'postGame'" class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.gameHistory | orderBy:'isMinority'" ng-class="seat.isMinority ? 'list-group-item-danger' : 'list-group-item-success'">
         {{seat.playerName}}
-        <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Jaren Ward</span>
+        <span class="label label-success pull-right" ng-show="seat.isAllKnowing">Pahanin</span>
         <span class="label label-danger pull-right" ng-show="seat.isLastDitch">Dredgen Yor</span>
         <span class="label label-warning pull-right" ng-show="seat.isLastDitched">Thorned</span>
       </li>
@@ -48,13 +48,13 @@
       </ul>
       <div class="panel-collapse collapse" id="rules">
         <ul class="list-group">
-          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>known</strong> to other <strong class="text-danger">Corrupted Guardians</strong> and to <strong class="text-success">Jaren Ward</strong>.</li>
+          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>known</strong> to other <strong class="text-danger">Corrupted Guardians</strong> and to <strong class="text-success">Pahanin</strong>.</li>
           <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> are <strong>hidden</strong> from all other <strong class="text-success">Guardians</strong>.</li>
         </ul>
         <ul class="list-group">
           <li class="list-group-item"><strong class="text-success">Guardians</strong> win the game if <strong>three</strong> Strikes <strong class="text-success">succeed</strong>.</li>
           <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> win the game if <strong>three</strong> Strikes <strong class="text-danger">fail</strong>.</li>
-          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> also win if the <strong class="text-danger">Dredgen Yor</strong> murders the <strong class="text-success">Jaren Ward</strong> after three <strong class="text-success">successful</strong> Strikes.</li>
+          <li class="list-group-item"><strong class="text-danger">The Corrupted</strong> also win if the <strong class="text-danger">Dredgen Yor</strong> murders <strong class="text-success">Pahanin</strong> after three <strong class="text-success">successful</strong> Strikes.</li>
         </ul>
       </div>
       <div class="panel-footer">
@@ -173,7 +173,7 @@
 
   <div ng-show="game.state === 'lastDitch' && seat.isLastDitch" class="panel panel-primary">
     <div class="panel-heading">
-      Murder Jaren Ward.
+      Take Pahanin's Light.
     </div>
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="seat in game.seats" ng-show="!seat.isMinority" ng-click="lastDitch(seat.playerId)">{{seat.playerName}}</li>
