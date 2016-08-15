@@ -248,7 +248,7 @@ function startGame(gameId) {
 
       game.seats = _.shuffle(game.seats);
       game.seats[0].isAllKnowing = true;
-      game.seats[0].roleName = 'Jaren Ward';
+      game.seats[0].roleName = 'Pahanin';
       game.seats[1].isLastDitch = true;
       game.seats[1].isMinority = true;
       game.seats[1].roleName = 'Dredgen Yor';
